@@ -1,4 +1,4 @@
-require "sugar/utils/version"
+require 'sugar/utils/version'
 
 module Sugar
   module Utils
