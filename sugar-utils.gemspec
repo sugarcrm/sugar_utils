@@ -23,4 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-tabular', '~> 0.1.0'
   spec.add_development_dependency 'simplecov',     '~> 0.11.0'
   spec.add_development_dependency 'rubocop',       '~> 0.37'
+  spec.add_development_dependency 'yard',          '~> 0.8.7.6'
+  spec.add_development_dependency 'yardstick',     '~> 0.9.9'
 end
