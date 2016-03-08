@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Sugar::Utils do
+describe SugarUtils do
   it 'has a version number' do
-    expect(Sugar::Utils::VERSION).not_to be nil
+    expect(SugarUtils::VERSION).not_to be nil
   end
 
   it 'does something useful' do

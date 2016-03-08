@@ -1,4 +1,4 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'sugar/utils'
+require 'sugar_utils'
 require 'simplecov'
 SimpleCov.start 'rails'
