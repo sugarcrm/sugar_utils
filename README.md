@@ -10,7 +10,12 @@
 
 Utility methods extracted from SugarCRM Ruby projects.
 
-These are the methods which are being extracted:
+These methods are included:
+
+* ensure_boolean
+* ensure_integer
+
+These methods will probably be included in the future:
 
 * sizeof_dir
 * find_files
@@ -25,10 +30,6 @@ These are the methods which are being extracted:
 * encrypt
 * http_get_file
 * timeout_retry
-* ensure_boolean
-* ensure_time
-* ensure_date_time
-* ensure_integer!
 * flock_with_timeout
 
 ## Installation
