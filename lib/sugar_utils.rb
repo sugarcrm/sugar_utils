@@ -7,7 +7,7 @@ module SugarUtils
   #
   # @return [Boolean]
   def self.ensure_boolean(value)
-    return false if value.respond_to?(:to_s) && value.to_s.downcase == 'false'
+    return false if value.respond_to?(:to_s) && value.to_s.casecmp('false').zero?
     value ? true : false
   end
 
