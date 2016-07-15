@@ -17,6 +17,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'multi_json',   '~> 1.12.1'
+  spec.add_dependency 'solid_assert', '~> 1.0'
+
   spec.add_development_dependency 'bundler',       '~> 1.9'
   spec.add_development_dependency 'rake',          '~> 10.0'
   spec.add_development_dependency 'rspec',         '~> 3.4.0'
@@ -25,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop',       '~> 0.37'
   spec.add_development_dependency 'yard',          '~> 0.8.7.6'
   spec.add_development_dependency 'yardstick',     '~> 0.9.9'
+  spec.add_development_dependency 'fakefs',        '~> 0.7'
 end
