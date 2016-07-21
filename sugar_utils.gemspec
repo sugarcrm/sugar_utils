@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'multi_json',   '~> 1.12.1'
   spec.add_dependency 'solid_assert', '~> 1.0'
 
-  spec.add_development_dependency 'bundler',       '~> 1.9'
+  spec.add_development_dependency 'bundler',       '~> 1.7'
   spec.add_development_dependency 'rake',          '~> 10.0'
   spec.add_development_dependency 'rspec',         '~> 3.4.0'
   spec.add_development_dependency 'rspec-tabular', '~> 0.1.0'
