@@ -2,10 +2,14 @@
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'sugar_utils'
-require 'simplecov'
 require 'rspec/tabular'
 require 'fakefs/spec_helpers'
-SimpleCov.start 'rails'
+
+# Setup code coverage
+require 'simplecov'
+require 'codeclimate-test-reporter'
+SimpleCov.start
+CodeClimate::TestReporter.start
 
 SolidAssert.enable_assertions
 

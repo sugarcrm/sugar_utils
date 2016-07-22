@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'yard',          '~> 0.8.7.6'
   spec.add_development_dependency 'yardstick',     '~> 0.9.9'
   spec.add_development_dependency 'fakefs',        '~> 0.7'
+  spec.add_development_dependency 'codeclimate-test-reporter'
 end

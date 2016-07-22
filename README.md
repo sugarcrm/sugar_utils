@@ -3,8 +3,8 @@
 [![Gem Version](https://badge.fury.io/rb/sugar_utils.svg)](http://badge.fury.io/rb/sugar_utils)
 [![Dependency Status](https://gemnasium.com/sugarcrm/sugar_utils.svg)](https://gemnasium.com/sugarcrm/sugar_utils)
 [![Build Status](https://travis-ci.org/sugarcrm/sugar_utils.svg?branch=master)](https://travis-ci.org/sugarcrm/sugar_utils)
-[![Coverage Status](http://img.shields.io/coveralls/sugarcrm/sugar_utils/master.svg)](https://coveralls.io/r/sugarcrm/sugar_utils)
 [![Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/gpa.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils)
+[![Test Coverage](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/coverage.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils/coverage)
 [![Inline docs](http://inch-ci.org/github/sugarcrm/sugar_utils.svg)](http://inch-ci.org/github/sugarcrm/sugar_utils)
 [![License](http://img.shields.io/badge/license-Apache2-green.svg?style=flat)](LICENSE)
 
