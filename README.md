@@ -12,16 +12,17 @@ Utility methods extracted from SugarCRM Ruby projects.
 
 These methods are included:
 
-* ensure_boolean
-* ensure_integer
+* SugarUtils.ensure_boolean
+* SugarUtils.ensure_integer
+* SugarUtils::File.flock
+* SugarUtils::File.read_json
+* SugarUtils::File.write_json
 
 These methods will probably be included in the future:
 
 * sizeof_dir
 * find_files
 * find_file!
-* read_json
-* write_json
 * gzip
 * gunzip
 * tarball
@@ -30,7 +31,6 @@ These methods will probably be included in the future:
 * encrypt
 * http_get_file
 * timeout_retry
-* flock_with_timeout
 
 ## Installation
 
@@ -44,7 +44,7 @@ gem 'sugar_utils'
 And then execute:
 
 ```bash
-$ bundle
+$ bundle install
 ```
 
 Or install it yourself as:
