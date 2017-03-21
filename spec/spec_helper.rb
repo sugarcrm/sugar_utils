@@ -7,9 +7,7 @@ require 'fakefs/spec_helpers'
 
 # Setup code coverage
 require 'simplecov'
-require 'codeclimate-test-reporter'
 SimpleCov.start
-CodeClimate::TestReporter.start
 
 SolidAssert.enable_assertions
 

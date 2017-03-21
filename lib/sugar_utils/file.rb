@@ -3,6 +3,7 @@
 require 'solid_assert'
 require 'fileutils'
 require 'multi_json'
+require 'timeout'
 
 module SugarUtils
   module File
