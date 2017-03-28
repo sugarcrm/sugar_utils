@@ -3,12 +3,12 @@
 require 'spec_helper'
 
 describe SugarUtils::File do
-  describe '.flock' do
-    subject { described_class.flock(file, :locking_constant, options) }
+  describe '.flock_shared' do
+    subject { described_class.flock_shared(file, options) }
     let(:file) { instance_double(File) }
     before do
-      expect(Timeout).to receive(:timeout).with(expected_timeout).and_yield
-      expect(file).to receive(:flock).with(:locking_constant)
+      allow(Timeout).to receive(:timeout).with(expected_timeout).and_yield
+      expect(file).to receive(:flock).with(::File::LOCK_SH)
     end
 
     inputs            :options,           :expected_timeout
@@ -17,59 +17,90 @@ describe SugarUtils::File do
     side_effects_with Hash[timeout: 5],   5
   end
 
-  describe '.read_json', :fakefs do
-    subject { described_class.read_json('filename.json', options) }
+  describe '.flock_exclusive' do
+    subject { described_class.flock_exclusive(file, options) }
+    let(:file) { instance_double(File) }
+    before do
+      allow(Timeout).to receive(:timeout).with(expected_timeout).and_yield
+      expect(file).to receive(:flock).with(::File::LOCK_EX)
+    end
+
+    inputs            :options,           :expected_timeout
+    side_effects_with Hash[],             10
+    side_effects_with Hash[timeout: nil], 10
+    side_effects_with Hash[timeout: 5],   5
+  end
+
+  describe '.read', :fakefs do
+    subject { described_class.read('filename', options) }
+
+    shared_examples_for 'handles the missing file error' do
+      # rubocop:disable Metrics/LineLength
+      inputs           :options
+      raise_error_with Hash[],                                                described_class::Error
+      raise_error_with Hash[],                                                'Cannot read filename'
+      raise_error_with Hash[raise_on_missing: true],                          described_class::Error
+      raise_error_with Hash[raise_on_missing: true],                          'Cannot read filename'
+      it_with          Hash[raise_on_missing: false],                         ''
+      it_with          Hash[raise_on_missing: false, value_on_missing: 'hi'], 'hi'
+      # rubocop:enable all
+    end
 
     context 'missing file' do
-      inputs           :options
-      raise_error_with Hash[],                        described_class::Error
-      raise_error_with Hash[],                        'Cannot read filename.json'
-      raise_error_with Hash[raise_on_missing: true],  described_class::Error
-      raise_error_with Hash[raise_on_missing: true],  'Cannot read filename.json'
-      it_with          Hash[raise_on_missing: false], {}
+      it_behaves_like 'handles the missing file error'
+    end
+
+    context 'with IOError' do
+      before { allow(File).to receive(:open).and_raise(IOError) }
+      it_behaves_like 'handles the missing file error'
     end
 
     context 'file present' do
-      let(:options) { {} }
-      before { write('filename.json', content) }
-
-      context 'SysteCallError' do
-        let(:options) { {} }
-        let(:content) { '' }
-        let(:exception) { SystemCallError.new(nil) }
-        before { allow(File).to receive(:open).and_raise(exception) }
-        it { expect_raise_error('Cannot read filename.json') }
-      end
-
-      context 'IOError' do
-        let(:options) { {} }
-        let(:content) { '' }
-        let(:exception) { IOError.new(nil) }
-        before { allow(File).to receive(:open).and_raise(exception) }
-        it { expect_raise_error('Cannot read filename.json') }
-      end
+      let(:options) { { key: :value } }
+      before { write('filename', 'content') }
 
       context 'and locked' do
-        let(:content) { '' }
-        before { expect_flock(File::LOCK_SH, options).and_raise(Timeout::Error) }
-        it { expect_raise_error('Cannot read filename.json because it is locked') }
+        before do
+          expect(described_class).to receive(:flock_shared)
+            .with(kind_of(File), options)
+            .and_raise(Timeout::Error)
+        end
+        it { expect_raise_error('Cannot read filename because it is locked') }
       end
 
       context 'and unlocked' do
-        before { expect_flock(File::LOCK_SH, options) }
-
-        inputs           :content
-        raise_error_with 'I am not json',                described_class::Error
-        raise_error_with 'I am not json',                'Cannot parse filename.json'
-        it_with          Hash['key' => 'value'].to_json, Hash['key' => 'value']
+        before do
+          expect(described_class).to receive(:flock_shared)
+            .with(kind_of(File), options)
+        end
+        it { is_expected.to eq('content') }
       end
     end
   end
 
-  describe '.write_json', :fakefs do
-    subject { described_class.write_json(filename, data, options) }
-    let(:data)     { { 'key' => 'value' } }
-    let(:filename) { 'dir1/dir2/filename.json' }
+  describe '.read_json', :fakefs do
+    subject do
+      described_class.read_json(
+        :filename, key: :value, value_on_missing: :foobar
+      )
+    end
+
+    before do
+      allow(described_class).to receive(:read)
+        .with(:filename, key: :value, value_on_missing: {})
+        .and_return(file_content)
+    end
+
+    inputs           :file_content
+    raise_error_with 'I am not json',                described_class::Error
+    raise_error_with 'I am not json',                'Cannot parse filename'
+    it_with          Hash['key' => 'value'].to_json, Hash['key' => 'value']
+  end
+
+  describe '.write', :fakefs do
+    subject { described_class.write(filename, data, options) }
+    let(:data)      { 'content' }
+    let(:filename)  { 'dir1/dir2/filename' }
 
     context 'SystemCallError' do
       let(:options) { {} }
@@ -87,36 +118,37 @@ describe SugarUtils::File do
 
     context 'locked' do
       let(:options) { {} }
-      before { expect_flock(File::LOCK_EX, options).and_raise(Timeout::Error) }
+      before do
+        expect(described_class).to receive(:flock_exclusive)
+          .with(kind_of(File), options)
+          .and_raise(Timeout::Error)
+      end
       it { expect_raise_error("Unable to write #{filename} because it is locked") }
     end
 
     context 'unlocked' do
       shared_examples_for 'file is written' do
-        before { expect_flock(File::LOCK_EX, options) }
+        before do
+          expect(described_class).to receive(:flock_exclusive)
+            .with(kind_of(File), options)
+        end
 
         context 'default options' do
           let(:options) { {} }
           before { subject }
-          specify do
-            expect(File.exist?(filename)).to eq(true)
-            expect(MultiJson.load(File.read(filename))).to eq(data)
-            expect(sprintf('%o', File.stat(filename).mode)).to eq('100666')
-          end
+          specify { expect(filename).to have_content(data) }
+          specify { expect(filename).to have_file_permission(0o100666) }
         end
 
         context 'options' do
-          let(:options) { { flush: true, perm: 0600 } }
+          let(:options) { { flush: true, perm: 0o600 } }
           before do
             expect_any_instance_of(File).to receive(:flush)
             expect_any_instance_of(File).to receive(:fsync)
             subject
           end
-          specify do
-            expect(File.exist?(filename)).to eq(true)
-            expect(MultiJson.load(File.read(filename))).to eq(data)
-            expect(sprintf('%o', File.stat(filename).mode)).to eq('100600')
-          end
+          specify { expect(filename).to have_content(data) }
+          specify { expect(filename).to have_file_permission(0o100600) }
         end
       end
 
@@ -125,7 +157,7 @@ describe SugarUtils::File do
       end
 
       context 'and exists' do
-        before { write(filename, 'foobar', 0777) }
+        before { write(filename, 'foobar', 0o777) }
         context 'not locked' do
           it_behaves_like 'file is written'
         end
@@ -133,14 +165,20 @@ describe SugarUtils::File do
     end
   end
 
-  ##############################################################################
+  describe '.write_json', :fakefs do
+    subject { described_class.write_json(:filename, data, :options) }
 
-  # @param [File::LOCK_SH, File::LOCK_EX] locking_constant
-  # @param [Hash] options
-  def expect_flock(locking_constant, options)
-    expect(described_class).to receive(:flock)
-      .with(kind_of(File), locking_constant, options)
+    let(:data) { { 'key' => 'value' } }
+    before do
+      expect(described_class).to receive(:write).with(
+        :filename, MultiJson.dump(data, pretty: true), :options
+      )
+    end
+
+    specify { subject }
   end
+
+  ##############################################################################
 
   # @param [String] message
   def expect_raise_error(message)
@@ -162,6 +200,4 @@ describe SugarUtils::File do
     File.write(filename, content)
     FileUtils.chmod(perm, filename) if perm
   end
-
-
 end

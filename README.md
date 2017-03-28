@@ -14,7 +14,10 @@ These methods are included:
 
 * SugarUtils.ensure_boolean
 * SugarUtils.ensure_integer
-* SugarUtils::File.flock
+* SugarUtils::File.flock_shared
+* SugarUtils::File.flock_exclusive
+* SugarUtils::File.read
+* SugarUtils::File.write
 * SugarUtils::File.read_json
 * SugarUtils::File.write_json
 

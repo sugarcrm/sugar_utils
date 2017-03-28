@@ -3,8 +3,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- SugarUtils::File.read, with locking and error handling when reading a plain
+  text file
+- SugarUtils::File.write, with locking and error handling when writing a plain
+  text file
+
 ### Changed
 - explicitly specify the Ruby v2.0.0 support limit
+- divide SugarUtils::File.flock into .flock_shared and .flock_exclusive
 
 ## [0.2.0] - 2016-07-21
 ### Added
