@@ -98,23 +98,22 @@ describe SugarUtils::File do
   end
 
   describe '.touch', :fakefs do
-    subject { described_class.touch(filename) }
+    subject { described_class.touch(filename, *options) }
+
+    let(:filename) { 'path1/path2/filename' }
 
     before { subject }
 
-    context 'without path' do
-      let(:filename) { 'filename' }
-      it { expect(File.exist?(filename)).to eq(true) }
-    end
-
-    context 'with path' do
-      let(:filename) { 'path1/path2/filename' }
-      it { expect(File.exist?(filename)).to eq(true) }
-    end
-
-    context 'with absolute path' do
-      let(:filename) { '/path1/path2/filename' }
-      it { expect(File.exist?(filename)).to eq(true) }
+    inputs       :options
+    specify_with([])                     { expect(File.exist?(filename)).to eq(true) }
+    specify_with([{ owner: 'nobody' }])  { expect(filename).to have_owner('nobody') }
+    specify_with([{ group: 'nogroup' }]) { expect(filename).to have_group('nogroup') }
+    specify_with([{ mode: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
+    specify_with([{ perm: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
+    specify_with([{ owner: 'nobody', group: 'nogroup', mode: 0o600 }]) do
+      expect(filename).to have_owner('nobody')
+      expect(filename).to have_group('nogroup')
+      expect(filename).to have_file_permission(0o100600)
     end
   end
 
@@ -161,14 +160,25 @@ describe SugarUtils::File do
           specify { expect(filename).to have_file_permission(0o100666) }
         end
 
-        context 'options' do
-          let(:options) { { flush: true, perm: 0o600 } }
+        context 'with deprecated options' do
+          let(:options) { { perm: 0o600 } }
+          before { subject }
+          specify { expect(filename).to have_content(data) }
+          specify { expect(filename).to have_file_permission(0o100600) }
+        end
+
+        context 'with deprecated options' do
+          let(:options) do
+            { flush: true, owner: 'nobody', group: 'nogroup', mode: 0o600 }
+          end
           before do
             expect_any_instance_of(File).to receive(:flush)
             expect_any_instance_of(File).to receive(:fsync)
             subject
           end
           specify { expect(filename).to have_content(data) }
+          specify { expect(filename).to have_owner('nobody') }
+          specify { expect(filename).to have_group('nogroup') }
           specify { expect(filename).to have_file_permission(0o100600) }
         end
       end

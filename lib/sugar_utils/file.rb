@@ -74,11 +74,24 @@ module SugarUtils
     end
 
     # @param [String] filename
+    # @param [Hash] options
+    # @option options [String, Integer] :owner
+    # @option options [String, Integer] :group
+    # @option options [Integer] :mode
+    # @option options [Integer] :perm @deprecated
     #
     # @return [void]
-    def self.touch(filename)
+    def self.touch(filename, options = {})
+      owner = options[:owner]
+      group = options[:group]
+      mode  = options[:mode] || options[:perm]
+
+      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.has_key?(:perm)
+
       FileUtils.mkdir_p(::File.dirname(filename))
       FileUtils.touch(filename)
+      FileUtils.chown(owner, group, filename)
+      FileUtils.chmod(mode, filename) if mode
     end
 
     # @param [String] filename
@@ -86,17 +99,24 @@ module SugarUtils
     # @param [Hash] options
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :flush (false)
-    # @option options [Integer] :perm (0666)
+    # @option options [String, Integer] :owner
+    # @option options [String, Integer] :group
+    # @option options [Integer] :mode (0o666)
+    # @option options [Integer] :perm (0o666) @deprecated
     #
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
     def self.write(filename, data, options = {})
-      perm  = options[:perm] || 0o666
       flush = options[:flush] || false
+      owner = options[:owner]
+      group = options[:group]
+      mode  = options[:mode] || options[:perm] || 0o666
+
+      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.has_key?(:perm)
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      ::File.open(filename, ::File::RDWR | ::File::CREAT, perm) do |file|
+      ::File.open(filename, ::File::RDWR | ::File::CREAT, mode) do |file|
         flock_exclusive(file, options)
 
         file.truncate(0) # Ensure file is empty before proceeding.
@@ -112,8 +132,9 @@ module SugarUtils
         end
 
         # Ensure that the permissions are correct if the file already existed.
-        file.chmod(perm)
+        file.chmod(mode)
       end
+      FileUtils.chown(owner, group, filename)
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
     rescue SystemCallError, IOError => boom
@@ -133,5 +154,33 @@ module SugarUtils
     def self.write_json(filename, data, options = {})
       write(filename, MultiJson.dump(data, pretty: true), options)
     end
+
+    ############################################################################
+
+    # Following the same pattern as the existing stdlib method deprecation
+    # module.
+    # @see http://ruby-doc.org/stdlib-2.0.0/libdoc/rubygems/rdoc/Gem/Deprecate.html
+    def self.deprecate_option(_method, option_name, option_repl, year, month)
+      return if Gem::Deprecate.skip
+
+      klass  = self.is_a?(Module)
+      target = klass ? "#{self}." : "#{self.class}#"
+
+      # Determine the method
+      method = caller_locations(1,1).first.label
+
+      # Determine the caller
+      external_caller             = caller_locations(2,1).first
+      location_of_external_caller = "#{external_caller.absolute_path}:#{external_caller.lineno}"
+
+      msg = [
+        "NOTE: #{target}#{method} option :#{option_name} is deprecated",
+        option_repl == :none ? ' with no replacement' : "; use :#{option_repl} instead",
+        ". It will be removed on or after %4d-%02d-01." % [year, month],
+        "\n#{target}#{method} called from #{location_of_external_caller}"
+      ]
+      warn("#{msg.join}.")
+    end
+    private_class_method :deprecate_option
   end
 end

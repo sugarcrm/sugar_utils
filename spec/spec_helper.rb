@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'sugar_utils'
 require 'rspec/tabular'
 require 'fakefs/spec_helpers'
+require 'etc'
 # HACK: including pp seems to resolve an error with FakeFS and File.read
 # This seems to be related to but not the same as the problem mentioned in the
 # README
@@ -46,8 +47,28 @@ RSpec::Matchers.define :have_file_permission do |expected|
   match do |actual|
     next false unless File.exist?(actual)
 
-    @actual   = format('%o', File.stat(filename).mode)
+    @actual   = format('%o', File.stat(actual).mode)
     @expected = format('%o', expected)
+    values_match?(@expected, @actual)
+  end
+end
+
+RSpec::Matchers.define :have_owner do |expected|
+  match do |actual|
+    next false unless File.exist?(actual)
+
+    @actual   = Etc.getpwuid(File.stat(filename).uid).name
+    @expected = expected
+    values_match?(@expected, @actual)
+  end
+end
+
+RSpec::Matchers.define :have_group do |expected|
+  match do |actual|
+    next false unless File.exist?(actual)
+
+    @actual   = Etc.getgrgid(File.stat(actual).gid).name
+    @expected = expected
     values_match?(@expected, @actual)
   end
 end
