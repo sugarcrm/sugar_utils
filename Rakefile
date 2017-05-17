@@ -11,7 +11,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 RuboCop::RakeTask.new(:rubocop) do |task|
   FileUtils.mkdir_p('tmp')
-  task.options = %w(--format progress --format simple --out tmp/rubocop.txt)
+  task.options = %w[--format progress --format simple --out tmp/rubocop.txt]
 end
 
 YARD::Rake::YardocTask.new do |t|
@@ -23,6 +23,6 @@ Yardstick::Rake::Measurement.new(:yardstick_measure) do |measurement|
   measurement.output = 'tmp/yard_coverage.txt'
 end
 
-task quality: %i(rubocop yardstick_measure)
+task quality: %i[rubocop yardstick_measure]
 
 task default: [:spec]

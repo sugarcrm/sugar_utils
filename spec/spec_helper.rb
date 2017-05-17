@@ -17,9 +17,7 @@ SimpleCov.start
 SolidAssert.enable_assertions
 
 RSpec.configure do |config|
-  # rubocop:disable Style/MixinGrouping
   config.include FakeFS::SpecHelpers, fakefs: true
-  # rubocop:enable all
 end
 
 RSpec::Matchers.define :have_json_content do |expected|
