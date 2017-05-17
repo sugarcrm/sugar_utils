@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.1] - 2017-05-17
+### Added
+- options :owner, :group, :mode to SugarUtils::File.write and .touch
+
+### Changed
+- marked the :perm option as deprecated by :mode
+
 ## [0.4.0] - 2017-05-17
 ### Added
 - SugarUtils::File.touch, which will ensure the directory before touching the
