@@ -74,6 +74,14 @@ module SugarUtils
     end
 
     # @param [String] filename
+    #
+    # @return [void]
+    def self.touch(filename)
+      FileUtils.mkdir_p(::File.dirname(filename))
+      FileUtils.touch(filename)
+    end
+
+    # @param [String] filename
     # @param [#to_s] data
     # @param [Hash] options
     # @option options [Integer] :timeout (10)

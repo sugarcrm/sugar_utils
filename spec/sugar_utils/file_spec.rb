@@ -97,6 +97,27 @@ describe SugarUtils::File do
     it_with          Hash['key' => 'value'].to_json, Hash['key' => 'value']
   end
 
+  describe '.touch', :fakefs do
+    subject { described_class.touch(filename) }
+
+    before { subject }
+
+    context 'without path' do
+      let(:filename) { 'filename' }
+      it { expect(File.exist?(filename)).to eq(true) }
+    end
+
+    context 'with path' do
+      let(:filename) { 'path1/path2/filename' }
+      it { expect(File.exist?(filename)).to eq(true) }
+    end
+
+    context 'with absolute path' do
+      let(:filename) { '/path1/path2/filename' }
+      it { expect(File.exist?(filename)).to eq(true) }
+    end
+  end
+
   describe '.write', :fakefs do
     subject { described_class.write(filename, data, options) }
     let(:data)      { 'content' }
