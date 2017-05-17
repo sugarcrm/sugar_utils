@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] - 2017-05-17
+### Added
+- SugarUtils::File.touch, which will ensure the directory before touching the
+  specified file
+
 ## [0.3.0] - 2017-03-29
 ### Added
 - SugarUtils::File.read, with locking and error handling when reading a plain
