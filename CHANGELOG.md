@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.2] - 2017-08-01
+### Changed
+- default file creation permissions from 666 to 644.
+
 ## [0.4.1] - 2017-05-17
 ### Added
 - options :owner, :group, :mode to SugarUtils::File.write and .touch
