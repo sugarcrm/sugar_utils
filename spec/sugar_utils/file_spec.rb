@@ -157,7 +157,7 @@ describe SugarUtils::File do
           let(:options) { {} }
           before { subject }
           specify { expect(filename).to have_content(data) }
-          specify { expect(filename).to have_file_permission(0o100644) }
+          specify { expect(filename).to have_file_permission(0o100666) }
         end
 
         context 'with deprecated options' do
