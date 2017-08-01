@@ -101,8 +101,8 @@ module SugarUtils
     # @option options [Boolean] :flush (false)
     # @option options [String, Integer] :owner
     # @option options [String, Integer] :group
-    # @option options [Integer] :mode (0o666)
-    # @option options [Integer] :perm (0o666) @deprecated
+    # @option options [Integer] :mode (0o644)
+    # @option options [Integer] :perm (0o644) @deprecated
     #
     # @raise [SugarUtils::File::Error]
     #
@@ -111,7 +111,7 @@ module SugarUtils
       flush = options[:flush] || false
       owner = options[:owner]
       group = options[:group]
-      mode  = options[:mode] || options[:perm] || 0o666
+      mode  = options[:mode] || options[:perm] || 0o644
 
       deprecate_option(:touch, :perm, :mode, 2017, 8) if options.has_key?(:perm)
 
@@ -146,7 +146,7 @@ module SugarUtils
     # @param [Hash] options
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :flush (false)
-    # @option options [Integer] :perm (0666)
+    # @option options [Integer] :perm (0644)
     #
     # @raise [SugarUtils::File::Error]
     #
