@@ -73,3 +73,13 @@ RSpec::Matchers.define :have_group do |expected|
     values_match?(@expected, @actual)
   end
 end
+
+RSpec::Matchers.define :have_mtime do |expected|
+  match do |actual|
+    next false unless File.exist?(actual)
+
+    @actual   = File.stat(actual).mtime
+    @expected = expected
+    values_match?(@expected, @actual)
+  end
+end
