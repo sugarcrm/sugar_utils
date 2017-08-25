@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# encoding: utf-8
+# frozen_string_literal: true
 
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
@@ -25,4 +26,4 @@ end
 
 task quality: %i[rubocop yardstick_measure]
 
-task default: [:spec]
+task default: %i[spec]

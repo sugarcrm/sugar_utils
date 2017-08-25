@@ -1,4 +1,5 @@
-# -*- encoding : utf-8 -*-
+# encoding : utf-8
+# frozen_string_literal: true
 
 require 'spec_helper'
 
@@ -35,7 +36,6 @@ describe SugarUtils::File do
     subject { described_class.read('filename', options) }
 
     shared_examples_for 'handles the missing file error' do
-      # rubocop:disable Metrics/LineLength
       inputs           :options
       raise_error_with Hash[],                                                described_class::Error
       raise_error_with Hash[],                                                'Cannot read filename'
@@ -43,7 +43,6 @@ describe SugarUtils::File do
       raise_error_with Hash[raise_on_missing: true],                          'Cannot read filename'
       it_with          Hash[raise_on_missing: false],                         ''
       it_with          Hash[raise_on_missing: false, value_on_missing: 'hi'], 'hi'
-      # rubocop:enable all
     end
 
     context 'missing file' do
@@ -104,7 +103,7 @@ describe SugarUtils::File do
 
     before { subject }
 
-    inputs       :options
+    inputs       :options # rubocop:disable ExtraSpacing, SpaceBeforeFirstArg
     specify_with([])                     { expect(File.exist?(filename)).to eq(true) }
     specify_with([{ owner: 'nobody' }])  { expect(filename).to have_owner('nobody') }
     specify_with([{ group: 'nogroup' }]) { expect(filename).to have_group('nogroup') }

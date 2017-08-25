@@ -2,13 +2,9 @@ Documentation:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 90
-
-Metrics/MethodLength:
-  Max: 20
-
-Metrics/AbcSize:
-  Max: 19
+  Max: 150
+  Include:
+    - 'spec/**/*'
 
 # Because of the way that blocks are used in RSpecs can end up being long when
 # example groups are nested or many examples are checked.

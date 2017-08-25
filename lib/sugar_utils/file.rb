@@ -1,4 +1,5 @@
-# -*- encoding : utf-8 -*-
+# encoding : utf-8
+# frozen_string_literal: true
 
 require 'solid_assert'
 require 'fileutils'
@@ -43,7 +44,7 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [String]
-    def self.read(filename, options = {})
+    def self.read(filename, options = {}) # rubocop:disable MethodLength
       options[:value_on_missing] ||= ''
       options[:raise_on_missing] = true if options[:raise_on_missing].nil?
 
@@ -86,7 +87,7 @@ module SugarUtils
       group = options[:group]
       mode  = options[:mode] || options[:perm]
 
-      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.has_key?(:perm)
+      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.key?(:perm)
 
       FileUtils.mkdir_p(::File.dirname(filename))
       FileUtils.touch(filename)
@@ -107,13 +108,13 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
-    def self.write(filename, data, options = {})
+    def self.write(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity
       flush = options[:flush] || false
       owner = options[:owner]
       group = options[:group]
       mode  = options[:mode] || options[:perm] || 0o644
 
-      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.has_key?(:perm)
+      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.key?(:perm)
 
       FileUtils.mkdir_p(::File.dirname(filename))
       ::File.open(filename, ::File::RDWR | ::File::CREAT, mode) do |file|
@@ -160,23 +161,23 @@ module SugarUtils
     # Following the same pattern as the existing stdlib method deprecation
     # module.
     # @see http://ruby-doc.org/stdlib-2.0.0/libdoc/rubygems/rdoc/Gem/Deprecate.html
-    def self.deprecate_option(_method, option_name, option_repl, year, month)
+    def self.deprecate_option(_method, option_name, option_repl, year, month) # rubocop:disable MethodLength, AbcSize
       return if Gem::Deprecate.skip
 
-      klass  = self.is_a?(Module)
+      klass  = is_a?(Module)
       target = klass ? "#{self}." : "#{self.class}#"
 
       # Determine the method
-      method = caller_locations(1,1).first.label
+      method = caller_locations(1, 1).first.label
 
       # Determine the caller
-      external_caller             = caller_locations(2,1).first
+      external_caller             = caller_locations(2, 1).first
       location_of_external_caller = "#{external_caller.absolute_path}:#{external_caller.lineno}"
 
       msg = [
         "NOTE: #{target}#{method} option :#{option_name} is deprecated",
         option_repl == :none ? ' with no replacement' : "; use :#{option_repl} instead",
-        ". It will be removed on or after %4d-%02d-01." % [year, month],
+        format('. It will be removed on or after %4d-%02d-01.', year, month),
         "\n#{target}#{method} called from #{location_of_external_caller}"
       ]
       warn("#{msg.join}.")
