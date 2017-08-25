@@ -103,17 +103,19 @@ module SugarUtils
     # @option options [String, Integer] :group
     # @option options [Integer] :mode
     # @option options [Integer] :perm @deprecated
+    # @option options [Integer] :mtime
     #
     # @return [void]
     def self.touch(filename, options = {})
-      owner = options[:owner]
-      group = options[:group]
-      mode  = options[:mode] || options[:perm]
+      owner         = options[:owner]
+      group         = options[:group]
+      mode          = options[:mode] || options[:perm]
+      touch_options = options.select { |k| %i[mtime].include?(k) }
 
       deprecate_option(:touch, :perm, :mode, 2017, 8) if options.key?(:perm)
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      FileUtils.touch(filename)
+      FileUtils.touch(filename, touch_options)
       FileUtils.chown(owner, group, filename)
       FileUtils.chmod(mode, filename) if mode
     end

@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - option to scrub character encoding in SugarUtils::File.read
+- option to set mtime in SugarUtils::File.touch
 
 ## [0.4.2] - 2017-08-01
 ### Changed

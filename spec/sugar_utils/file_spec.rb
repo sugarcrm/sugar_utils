@@ -117,10 +117,12 @@ describe SugarUtils::File do
     specify_with([{ group: 'nogroup' }]) { expect(filename).to have_group('nogroup') }
     specify_with([{ mode: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
     specify_with([{ perm: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
-    specify_with([{ owner: 'nobody', group: 'nogroup', mode: 0o600 }]) do
+    specify_with([{ mtime: 0 }])         { expect(filename).to have_mtime(0) }
+    specify_with([{ owner: 'nobody', group: 'nogroup', mode: 0o600, mtime: 0 }]) do
       expect(filename).to have_owner('nobody')
       expect(filename).to have_group('nogroup')
       expect(filename).to have_file_permission(0o100600)
+      expect(filename).to have_mtime(0)
     end
   end
 
@@ -174,7 +176,7 @@ describe SugarUtils::File do
           specify { expect(filename).to have_file_permission(0o100600) }
         end
 
-        context 'with deprecated options' do
+        context 'without deprecated options' do
           let(:options) do
             { flush: true, owner: 'nobody', group: 'nogroup', mode: 0o600 }
           end
