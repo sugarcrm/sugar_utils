@@ -40,17 +40,40 @@ module SugarUtils
     # @option options [Boolean] :raise_on_missing (true)
     # @option options [String] :value_on_missing ('') which specifies the
     #   value to return if the file is missing and raise_on_missing is false
+    # @option options [Boolean, String] :scrub_encoding scrub incorrectly
+    #   encoded characters with this value, or with '' if the value is true
     #
     # @raise [SugarUtils::File::Error]
     #
     # @return [String]
-    def self.read(filename, options = {}) # rubocop:disable MethodLength
+    def self.read(filename, options = {}) # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity, PerceivedComplexity
       options[:value_on_missing] ||= ''
       options[:raise_on_missing] = true if options[:raise_on_missing].nil?
 
-      ::File.open(filename, ::File::RDONLY) do |file|
-        flock_shared(file, options)
-        file.read
+      result =
+        ::File.open(filename, ::File::RDONLY) do |file|
+          flock_shared(file, options)
+          file.read
+        end
+
+      return result unless options[:scrub_encoding]
+
+      replacement_character =
+        if options[:scrub_encoding].is_a?(String)
+          options[:scrub_encoding]
+        else
+          ''
+        end
+      if result.respond_to?(:scrub)
+        result.scrub(replacement_character)
+      else
+        result.encode(
+          result.encoding,
+          'binary',
+          invalid: :replace,
+          undef:   :replace,
+          replace: replacement_character
+        )
       end
     rescue SystemCallError, IOError
       raise(Error, "Cannot read #{filename}") if options[:raise_on_missing]
