@@ -55,10 +55,10 @@ describe SugarUtils::File do
     end
 
     context 'file present' do
-      let(:options) { { key: :value } }
-      before { write('filename', 'content') }
+      before { write('filename', "foo\x92bar") }
 
       context 'and locked' do
+        let(:options) { { key: :value } }
         before do
           expect(described_class).to receive(:flock_shared)
             .with(kind_of(File), options)
@@ -68,11 +68,19 @@ describe SugarUtils::File do
       end
 
       context 'and unlocked' do
+        let(:options) { { key: :value, scrub_encoding: scrub_encoding } }
         before do
           expect(described_class).to receive(:flock_shared)
             .with(kind_of(File), options)
         end
-        it { is_expected.to eq('content') }
+
+        inputs  :scrub_encoding
+        it_with nil,            "foo\x92bar"
+        it_with false,          "foo\x92bar"
+        it_with true,           'foobar'
+        it_with '',             'foobar'
+        it_with 'x',            'fooxbar'
+        it_with 'xxx',          'fooxxxbar'
       end
     end
   end

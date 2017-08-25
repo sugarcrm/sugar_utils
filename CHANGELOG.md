@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Added
+- option to scrub character encoding in SugarUtils::File.read
+
 ## [0.4.2] - 2017-08-01
 ### Changed
 - default file creation permissions from 666 to 644.
