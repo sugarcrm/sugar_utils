@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.4] - 2018-01-31
+### Changed
+- fixed a bug in SugarUtils::File.read_json which it would raise an exception
+  instead of returning an empty Hash, when :raise_on_missing was disabled and
+  there was an error reading the file
+
 ## [0.4.3] - 2017-08-25
 ### Added
 - option to scrub character encoding in SugarUtils::File.read
