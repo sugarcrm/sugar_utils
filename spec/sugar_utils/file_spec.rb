@@ -94,13 +94,14 @@ describe SugarUtils::File do
 
     before do
       allow(described_class).to receive(:read)
-        .with(:filename, key: :value, value_on_missing: {})
+        .with(:filename, key: :value, value_on_missing: :missing)
         .and_return(file_content)
     end
 
     inputs           :file_content
     raise_error_with 'I am not json',                described_class::Error
     raise_error_with 'I am not json',                'Cannot parse filename'
+    it_with          :missing,                       Hash[]
     it_with          Hash['key' => 'value'].to_json, Hash['key' => 'value']
   end
 

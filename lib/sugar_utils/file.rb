@@ -91,8 +91,12 @@ module SugarUtils
     #
     # @return [Object]
     def self.read_json(filename, options = {})
-      options[:value_on_missing] = {}
-      MultiJson.load(read(filename, options))
+      options[:value_on_missing] = :missing
+
+      read_result = read(filename, options)
+      return {} if read_result == :missing
+
+      MultiJson.load(read_result)
     rescue MultiJson::ParseError
       raise(Error, "Cannot parse #{filename}")
     end
