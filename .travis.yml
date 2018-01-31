@@ -5,14 +5,14 @@ rvm:
   - 2.2
   - 2.3
   - 2.4
+  - 2.5
   - ruby-head
 matrix:
   allow_failures:
     - rvm: ruby-head
-  exclude:
-    - rvm: 2.4
+    - rvm: 2.0
       os: osx
-    - rvm: ruby-head
+    - rvm: 2.4
       os: osx
 os:
   - linux
@@ -22,4 +22,4 @@ addons:
   code_climate:
     repo_token: c250bc1551dd13a07efdd5bc8a594924f6f762f7be9762e79da0c8f065cf93dd
 after_success:
-- bundle exec codeclimate-test-reporter
+  - bundle exec codeclimate-test-reporter
