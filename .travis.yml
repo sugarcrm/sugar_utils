@@ -18,8 +18,5 @@ os:
   - linux
   - osx
 sudo: false
-addons:
-  code_climate:
-    repo_token: c250bc1551dd13a07efdd5bc8a594924f6f762f7be9762e79da0c8f065cf93dd
 after_success:
   - bundle exec codeclimate-test-reporter
