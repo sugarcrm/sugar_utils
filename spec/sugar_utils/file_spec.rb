@@ -171,7 +171,7 @@ describe SugarUtils::File do
         end
 
         context 'with deprecated options' do
-          let(:options) { { perm: 0o600 } }
+          let(:options) { { mode: 0o600 } }
           before { subject }
           specify { expect(filename).to have_content(data) }
           specify { expect(filename).to have_file_permission(0o100600) }
@@ -179,7 +179,7 @@ describe SugarUtils::File do
 
         context 'without deprecated options' do
           let(:options) do
-            { flush: true, owner: 'nobody', group: 'nogroup', mode: 0o600 }
+            { flush: true, owner: 'nobody', group: 'nogroup', mode: 'w', perm: 0o600 }
           end
           before do
             expect_any_instance_of(File).to receive(:flush)
@@ -201,6 +201,16 @@ describe SugarUtils::File do
         before { write(filename, 'foobar', 0o777) }
         context 'not locked' do
           it_behaves_like 'file is written'
+
+          context 'with append mode' do
+            let(:options) { { mode: 'a+' } }
+            before do
+              expect(described_class).to receive(:flock_exclusive)
+                .with(kind_of(File), options)
+              subject
+            end
+            specify { expect(filename).to have_content("foobar#{data}") }
+          end
         end
       end
     end

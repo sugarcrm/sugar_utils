@@ -105,23 +105,26 @@ module SugarUtils
     # @param [Hash] options
     # @option options [String, Integer] :owner
     # @option options [String, Integer] :group
-    # @option options [Integer] :mode
-    # @option options [Integer] :perm @deprecated
+    # @option options [Integer] :mode @deprecated
+    # @option options [Integer] :perm
     # @option options [Integer] :mtime
     #
     # @return [void]
     def self.touch(filename, options = {})
       owner         = options[:owner]
       group         = options[:group]
-      mode          = options[:mode] || options[:perm]
+      perm          = options[:perm]
       touch_options = options.select { |k| %i[mtime].include?(k) }
 
-      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.key?(:perm)
+      if options[:mode].is_a?(Integer)
+        perm = options[:mode]
+        deprecate_option(:touch, :mode, :perm, 2018, 7)
+      end
 
       FileUtils.mkdir_p(::File.dirname(filename))
       FileUtils.touch(filename, touch_options)
       FileUtils.chown(owner, group, filename)
-      FileUtils.chmod(mode, filename) if mode
+      FileUtils.chmod(perm, filename) if perm
     end
 
     # @param [String] filename
@@ -131,8 +134,8 @@ module SugarUtils
     # @option options [Boolean] :flush (false)
     # @option options [String, Integer] :owner
     # @option options [String, Integer] :group
-    # @option options [Integer] :mode (0o644)
-    # @option options [Integer] :perm (0o644) @deprecated
+    # @option options [String] :mode (w+)
+    # @option options [Integer] :perm (0o644)
     #
     # @raise [SugarUtils::File::Error]
     #
@@ -141,15 +144,21 @@ module SugarUtils
       flush = options[:flush] || false
       owner = options[:owner]
       group = options[:group]
-      mode  = options[:mode] || options[:perm] || 0o644
+      perm  = options[:perm] || 0o644
+      mode  = 'w+'
 
-      deprecate_option(:touch, :perm, :mode, 2017, 8) if options.key?(:perm)
+      if options[:mode].is_a?(Integer)
+        perm = options[:mode]
+
+        deprecate_option(:write, :mode, ' with an integer value; use perm instead', 2018, 7)
+      elsif !options[:mode].nil?
+        mode = options[:mode]
+      end
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      ::File.open(filename, ::File::RDWR | ::File::CREAT, mode) do |file|
+      ::File.open(filename, mode, perm) do |file|
         flock_exclusive(file, options)
 
-        file.truncate(0) # Ensure file is empty before proceeding.
         file.puts(data.to_s)
 
         # Flush and fsync to be 100% sure we write this data out now because we
@@ -162,7 +171,7 @@ module SugarUtils
         end
 
         # Ensure that the permissions are correct if the file already existed.
-        file.chmod(mode)
+        file.chmod(perm)
       end
       FileUtils.chown(owner, group, filename)
     rescue Timeout::Error
@@ -205,7 +214,14 @@ module SugarUtils
 
       msg = [
         "NOTE: #{target}#{method} option :#{option_name} is deprecated",
-        option_repl == :none ? ' with no replacement' : "; use :#{option_repl} instead",
+        case option_repl
+        when :none
+          ' with no replacement' 
+        when String
+          option_repl
+        else
+          "; use :#{option_repl} instead"
+        end,
         format('. It will be removed on or after %4d-%02d-01.', year, month),
         "\n#{target}#{method} called from #{location_of_external_caller}"
       ]

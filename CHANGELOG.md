@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.5.0] - 2018-05-01
+### Changed
+- bring back :perm as option to set the permissions in SugarUtils::File.write and SugarUtils::File.touch methods
+- :mode option in SugarUtils::File.write is now to be used for setting the file mode (e.g. read/write, append, etc). It can still be used for setting the permissions if it is an integer value for backwards compatibility purposes, but this usage has been deprecated.
+
 ## [0.4.4] - 2018-01-31
 ### Changed
 - fixed a bug in SugarUtils::File.read_json which it would raise an exception
