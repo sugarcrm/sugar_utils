@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'sugar_utils'
 require 'rspec/tabular'
 require 'fakefs/spec_helpers'
 require 'etc'
@@ -15,6 +14,8 @@ require 'pp'
 # Setup code coverage
 require 'simplecov'
 SimpleCov.start
+
+require 'sugar_utils'
 
 SolidAssert.enable_assertions
 
