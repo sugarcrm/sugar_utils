@@ -26,9 +26,9 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler',       '~> 1.7'
   spec.add_development_dependency 'rake',          '~> 12.0'
-  spec.add_development_dependency 'rspec',         '~> 3.5.0'
-  spec.add_development_dependency 'rspec-tabular', '~> 0.1.0'
-  spec.add_development_dependency 'simplecov',     '~> 0.14.0'
+  spec.add_development_dependency 'rspec',         '~> 3.8.0'
+  spec.add_development_dependency 'rspec-tabular', '~> 0.2.0'
+  spec.add_development_dependency 'simplecov',     '~> 0.16.0'
   spec.add_development_dependency 'yard',          '~> 0.9.0'
   spec.add_development_dependency 'yardstick',     '~> 0.9.9'
   spec.add_development_dependency 'fakefs',        '~> 0.7'
