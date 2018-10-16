@@ -4,6 +4,7 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'rspec/tabular'
 require 'fakefs/spec_helpers'
+require 'rspec/side_effects'
 require 'etc'
 # HACK: including pp seems to resolve an error with FakeFS and File.read
 # This seems to be related to but not the same as the problem mentioned in the

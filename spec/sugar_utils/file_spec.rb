@@ -110,16 +110,14 @@ describe SugarUtils::File do
 
     let(:filename) { 'path1/path2/filename' }
 
-    before { subject }
-
-    inputs       :options # rubocop:disable ExtraSpacing, SpaceBeforeFirstArg
-    specify_with([])                     { expect(File.exist?(filename)).to eq(true) }
-    specify_with([{ owner: 'nobody' }])  { expect(filename).to have_owner('nobody') }
-    specify_with([{ group: 'nogroup' }]) { expect(filename).to have_group('nogroup') }
-    specify_with([{ mode: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
-    specify_with([{ perm: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
-    specify_with([{ mtime: 0 }])         { expect(filename).to have_mtime(0) }
-    specify_with([{ owner: 'nobody', group: 'nogroup', mode: 0o600, mtime: 0 }]) do
+    inputs            :options # rubocop:disable ExtraSpacing, SpaceBeforeFirstArg
+    side_effects_with([])                     { expect(File.exist?(filename)).to eq(true) }
+    side_effects_with([{ owner: 'nobody' }])  { expect(filename).to have_owner('nobody') }
+    side_effects_with([{ group: 'nogroup' }]) { expect(filename).to have_group('nogroup') }
+    side_effects_with([{ mode: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
+    side_effects_with([{ perm: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
+    side_effects_with([{ mtime: 0 }])         { expect(filename).to have_mtime(0) }
+    side_effects_with([{ owner: 'nobody', group: 'nogroup', mode: 0o600, mtime: 0 }]) do
       expect(filename).to have_owner('nobody')
       expect(filename).to have_group('nogroup')
       expect(filename).to have_file_permission(0o100600)
@@ -165,16 +163,18 @@ describe SugarUtils::File do
 
         context 'default options' do
           let(:options) { {} }
-          before { subject }
-          specify { expect(filename).to have_content(data) }
-          specify { expect(filename).to have_file_permission(0o100644) }
+          its_side_effects_are do
+            expect(filename).to have_content(data)
+            expect(filename).to have_file_permission(0o100644)
+          end
         end
 
         context 'with deprecated options' do
           let(:options) { { mode: 0o600 } }
-          before { subject }
-          specify { expect(filename).to have_content(data) }
-          specify { expect(filename).to have_file_permission(0o100600) }
+          its_side_effects_are do
+            expect(filename).to have_content(data)
+            expect(filename).to have_file_permission(0o100600)
+          end
         end
 
         context 'without deprecated options' do
@@ -184,12 +184,13 @@ describe SugarUtils::File do
           before do
             expect_any_instance_of(File).to receive(:flush)
             expect_any_instance_of(File).to receive(:fsync)
-            subject
           end
-          specify { expect(filename).to have_content(data) }
-          specify { expect(filename).to have_owner('nobody') }
-          specify { expect(filename).to have_group('nogroup') }
-          specify { expect(filename).to have_file_permission(0o100600) }
+          its_side_effects_are do
+            expect(filename).to have_content(data)
+            expect(filename).to have_owner('nobody')
+            expect(filename).to have_group('nogroup')
+            expect(filename).to have_file_permission(0o100600)
+          end
         end
       end
 
@@ -207,9 +208,8 @@ describe SugarUtils::File do
             before do
               expect(described_class).to receive(:flock_exclusive)
                 .with(kind_of(File), options)
-              subject
             end
-            specify { expect(filename).to have_content("foobar#{data}") }
+            its_side_effects_are { expect(filename).to have_content("foobar#{data}") }
           end
         end
       end
@@ -226,7 +226,7 @@ describe SugarUtils::File do
       )
     end
 
-    specify { subject }
+    it_has_side_effects
   end
 
   ##############################################################################
