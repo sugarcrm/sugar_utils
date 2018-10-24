@@ -5,7 +5,7 @@ require 'sugar_utils/version'
 require 'sugar_utils/file'
 
 module SugarUtils
-  # @param [Object] value
+  # @param value [Object]
   #
   # @return [Boolean]
   def self.ensure_boolean(value)
@@ -13,7 +13,7 @@ module SugarUtils
     value ? true : false
   end
 
-  # @param [String, Float, Integer] value
+  # @param value [String, Float, Integer]
   #
   # @raise [ArgumentError] if the value is a string which cannot be converted
   # @raise [TypeError] if value is type which cannot be converted

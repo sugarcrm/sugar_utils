@@ -10,8 +10,8 @@ module SugarUtils
   module File
     class Error < StandardError; end
 
-    # @param [File] file
-    # @param [Hash] options
+    # @param file [File]
+    # @param options [Hash]
     # @option options [Integer] :timeout (10)
     #
     # @raise [Timeout::Error]
@@ -22,8 +22,8 @@ module SugarUtils
       Timeout.timeout(timeout) { file.flock(::File::LOCK_SH) }
     end
 
-    # @param [File] file
-    # @param [Hash] options
+    # @param file [File]
+    # @param options [Hash]
     # @option options [Integer] :timeout (10)
     #
     # @raise [Timeout::Error]
@@ -34,8 +34,8 @@ module SugarUtils
       Timeout.timeout(timeout) { file.flock(::File::LOCK_EX) }
     end
 
-    # @param [String] filename
-    # @param [Hash] options
+    # @param filename [String]
+    # @param options [Hash]
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :raise_on_missing (true)
     # @option options [String] :value_on_missing ('') which specifies the
@@ -82,8 +82,8 @@ module SugarUtils
       raise(Error, "Cannot read #{filename} because it is locked")
     end
 
-    # @param [String] filename
-    # @param [Hash] options
+    # @param filename [String]
+    # @param options [Hash]
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :raise_on_missing (true)
     #
@@ -101,8 +101,8 @@ module SugarUtils
       raise(Error, "Cannot parse #{filename}")
     end
 
-    # @param [String] filename
-    # @param [Hash] options
+    # @param filename [String]
+    # @param options [Hash]
     # @option options [String, Integer] :owner
     # @option options [String, Integer] :group
     # @option options [Integer] :mode @deprecated
@@ -127,9 +127,9 @@ module SugarUtils
       FileUtils.chmod(perm, filename) if perm
     end
 
-    # @param [String] filename
-    # @param [#to_s] data
-    # @param [Hash] options
+    # @param filename [String]
+    # @param data [#to_s]
+    # @param options [Hash]
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :flush (false)
     # @option options [String, Integer] :owner
@@ -180,9 +180,9 @@ module SugarUtils
       raise(Error, "Unable to write #{filename} with #{boom}")
     end
 
-    # @param [String] filename
-    # @param [#to_json] data
-    # @param [Hash] options
+    # @param filename [String] filename
+    # @param data [#to_json] data
+    # @param options [Hash] options
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :flush (false)
     # @option options [Integer] :perm (0644)

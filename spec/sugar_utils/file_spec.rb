@@ -231,19 +231,19 @@ describe SugarUtils::File do
 
   ##############################################################################
 
-  # @param [String] message
+  # @param message [String]
   def expect_raise_error(message)
     expect { subject }.to raise_error(described_class::Error, message)
   end
 
   # @overload write(filename, content)
-  #   @param [String] filename
-  #   @param [String] content
+  #   @param filename [String]
+  #   @param content [String]
   #
   # @overload write(filename, content, perm)
-  #   @param [String] filename
-  #   @param [String] content
-  #   @param [Integer] perm
+  #   @param filename [String]
+  #   @param content [String]
+  #   @param perm [Integer]
   #
   # @return [void]
   def write(filename, content, perm = nil)
