@@ -1,4 +1,3 @@
-# encoding : utf-8
 # frozen_string_literal: true
 
 require 'solid_assert'
@@ -77,6 +76,7 @@ module SugarUtils
       end
     rescue SystemCallError, IOError
       raise(Error, "Cannot read #{filename}") if options[:raise_on_missing]
+
       options[:value_on_missing]
     rescue Timeout::Error
       raise(Error, "Cannot read #{filename} because it is locked")
@@ -199,7 +199,7 @@ module SugarUtils
     # Following the same pattern as the existing stdlib method deprecation
     # module.
     # @see http://ruby-doc.org/stdlib-2.0.0/libdoc/rubygems/rdoc/Gem/Deprecate.html
-    def self.deprecate_option(_method, option_name, option_repl, year, month) # rubocop:disable MethodLength, AbcSize
+    def self.deprecate_option(_method, option_name, option_repl, year, month) # rubocop:disable MethodLength
       return if Gem::Deprecate.skip
 
       klass  = is_a?(Module)
@@ -216,7 +216,7 @@ module SugarUtils
         "NOTE: #{target}#{method} option :#{option_name} is deprecated",
         case option_repl
         when :none
-          ' with no replacement' 
+          ' with no replacement'
         when String
           option_repl
         else

@@ -1,7 +1,6 @@
-# encoding : utf-8
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'rspec/tabular'
 require 'fakefs/spec_helpers'
 require 'rspec/side_effects'
@@ -50,8 +49,8 @@ RSpec::Matchers.define :have_file_permission do |expected|
   match do |actual|
     next false unless File.exist?(actual)
 
-    @actual   = format('%o', File.stat(actual).mode)
-    @expected = format('%o', expected)
+    @actual   = format('%<mode>o', mode: File.stat(actual).mode)
+    @expected = format('%<mode>o', mode: expected)
     values_match?(@expected, @actual)
   end
 end

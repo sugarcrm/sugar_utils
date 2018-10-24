@@ -1,4 +1,3 @@
-# encoding : utf-8
 # frozen_string_literal: true
 
 require 'spec_helper'
@@ -20,7 +19,7 @@ describe SugarUtils do
     it_with 'false', false
     it_with 'FALSE', false
     it_with 'FaLsE', false
-    it_with :false,  false
+    it_with :false,  false # rubocop:disable Lint/BooleanSymbol
     it_with :FALSE,  false
     it_with :FaLsE,  false
   end

@@ -1,7 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'sugar_utils/version'
 
@@ -28,8 +27,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'fakefs',             '~> 0.7'
   spec.add_development_dependency 'rake',               '~> 12.0'
   spec.add_development_dependency 'rspec',              '~> 3.8.0'
-  spec.add_development_dependency 'rspec-tabular',      '~> 0.2.0'
   spec.add_development_dependency 'rspec-side_effects', '~> 0.2.0'
+  spec.add_development_dependency 'rspec-tabular',      '~> 0.2.0'
   spec.add_development_dependency 'simplecov',          '~> 0.16.0'
   spec.add_development_dependency 'yard',               '~> 0.9.0'
   spec.add_development_dependency 'yardstick',          '~> 0.9.9'
