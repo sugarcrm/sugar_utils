@@ -29,9 +29,14 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec',              '~> 3.8.0'
   spec.add_development_dependency 'rspec-side_effects', '~> 0.2.0'
   spec.add_development_dependency 'rspec-tabular',      '~> 0.2.0'
-  spec.add_development_dependency 'simplecov',          '~> 0.16.0'
-  spec.add_development_dependency 'yard',               '~> 0.9.0'
-  spec.add_development_dependency 'yardstick',          '~> 0.9.9'
 
+  # Dependencies whose APIs we do not really depend upon, and can be upgraded
+  # without limiting.
+  spec.add_development_dependency 'bundler-audit'
+  spec.add_development_dependency 'license_finder'
   spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-rspec'
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'yard'
+  spec.add_development_dependency 'yardstick'
 end
