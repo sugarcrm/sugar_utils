@@ -5,7 +5,9 @@ require 'spec_helper'
 describe SugarUtils::File do
   describe '.flock_shared' do
     subject { described_class.flock_shared(file, options) }
+
     let(:file) { instance_double(File) }
+
     before do
       allow(Timeout).to receive(:timeout).with(expected_timeout).and_yield
       expect(file).to receive(:flock).with(::File::LOCK_SH)
@@ -19,7 +21,9 @@ describe SugarUtils::File do
 
   describe '.flock_exclusive' do
     subject { described_class.flock_exclusive(file, options) }
+
     let(:file) { instance_double(File) }
+
     before do
       allow(Timeout).to receive(:timeout).with(expected_timeout).and_yield
       expect(file).to receive(:flock).with(::File::LOCK_EX)
@@ -44,30 +48,35 @@ describe SugarUtils::File do
       it_with          Hash[raise_on_missing: false, value_on_missing: 'hi'], 'hi'
     end
 
-    context 'missing file' do
+    context 'when missing file' do
       it_behaves_like 'handles the missing file error'
     end
 
     context 'with IOError' do
       before { allow(File).to receive(:open).and_raise(IOError) }
+
       it_behaves_like 'handles the missing file error'
     end
 
-    context 'file present' do
+    context 'when file present' do
       before { write('filename', "foo\x92bar") }
 
-      context 'and locked' do
+      # rubocop:disable RSpec/NestedGroups
+      context 'when locked' do
         let(:options) { { key: :value } }
+
         before do
           expect(described_class).to receive(:flock_shared)
             .with(kind_of(File), options)
             .and_raise(Timeout::Error)
         end
+
         it { expect_raise_error('Cannot read filename because it is locked') }
       end
 
-      context 'and unlocked' do
+      context 'when unlocked' do
         let(:options) { { key: :value, scrub_encoding: scrub_encoding } }
+
         before do
           expect(described_class).to receive(:flock_shared)
             .with(kind_of(File), options)
@@ -81,6 +90,7 @@ describe SugarUtils::File do
         it_with 'x',            'fooxbar'
         it_with 'xxx',          'fooxxxbar'
       end
+      # rubocop:enable RSpec/NestedGroups
     end
   end
 
@@ -126,42 +136,51 @@ describe SugarUtils::File do
 
   describe '.write', :fakefs do
     subject { described_class.write(filename, data, options) }
+
     let(:data)      { 'content' }
     let(:filename)  { 'dir1/dir2/filename' }
 
-    context 'SystemCallError' do
+    context 'when SystemCallError' do
       let(:options) { {} }
       let(:exception) { SystemCallError.new(nil) }
+
       before { allow(File).to receive(:open).and_raise(exception) }
+
       it { expect_raise_error("Unable to write #{filename} with #{exception}") }
     end
 
-    context 'IOError' do
+    context 'when IOError' do
       let(:options) { {} }
       let(:exception) { IOError.new(nil) }
+
       before { allow(File).to receive(:open).and_raise(exception) }
+
       it { expect_raise_error("Unable to write #{filename} with #{exception}") }
     end
 
-    context 'locked' do
+    context 'when locked' do
       let(:options) { {} }
+
       before do
         expect(described_class).to receive(:flock_exclusive)
           .with(kind_of(File), options)
           .and_raise(Timeout::Error)
       end
+
       it { expect_raise_error("Unable to write #{filename} because it is locked") }
     end
 
-    context 'unlocked' do
-      shared_examples_for 'file is written' do
+    context 'when unlocked' do
+      shared_examples_for 'file is written' do # rubocop:disable RSpec/SharedContext
         before do
           expect(described_class).to receive(:flock_exclusive)
             .with(kind_of(File), options)
         end
 
-        context 'default options' do
+        # rubocop:disable RSpec/NestedGroups
+        context 'without options' do
           let(:options) { {} }
+
           its_side_effects_are do
             expect(filename).to have_content(data)
             expect(filename).to have_file_permission(0o100644)
@@ -170,6 +189,7 @@ describe SugarUtils::File do
 
         context 'with deprecated options' do
           let(:options) { { mode: 0o600 } }
+
           its_side_effects_are do
             expect(filename).to have_content(data)
             expect(filename).to have_file_permission(0o100600)
@@ -180,10 +200,14 @@ describe SugarUtils::File do
           let(:options) do
             { flush: true, owner: 'nobody', group: 'nogroup', mode: 'w', perm: 0o600 }
           end
+
           before do
+            # rubocop:disable RSpec/AnyInstance
             expect_any_instance_of(File).to receive(:flush)
             expect_any_instance_of(File).to receive(:fsync)
+            # rubocop:enable RSpec/AnyInstance
           end
+
           its_side_effects_are do
             expect(filename).to have_content(data)
             expect(filename).to have_owner('nobody')
@@ -191,27 +215,33 @@ describe SugarUtils::File do
             expect(filename).to have_file_permission(0o100600)
           end
         end
+        # rubocop:enable RSpec/NestedGroups
       end
 
-      context 'and not exist' do
+      # rubocop:disable RSpec/NestedGroups
+      context 'when file does not exist' do
         it_behaves_like 'file is written'
       end
 
-      context 'and exists' do
+      context 'when file exists' do
         before { write(filename, 'foobar', 0o777) }
-        context 'not locked' do
+
+        context 'when not locked' do
           it_behaves_like 'file is written'
 
           context 'with append mode' do
             let(:options) { { mode: 'a+' } }
+
             before do
               expect(described_class).to receive(:flock_exclusive)
                 .with(kind_of(File), options)
             end
+
             its_side_effects_are { expect(filename).to have_content("foobar#{data}") }
           end
         end
       end
+      # rubocop:enable RSpec/NestedGroups
     end
   end
 
@@ -219,6 +249,7 @@ describe SugarUtils::File do
     subject { described_class.write_json(:filename, data, :options) }
 
     let(:data) { { 'key' => 'value' } }
+
     before do
       expect(described_class).to receive(:write).with(
         :filename, MultiJson.dump(data, pretty: true), :options

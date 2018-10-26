@@ -11,8 +11,17 @@ Metrics/LineLength:
   Include:
     - 'spec/**/*'
 
+RSpec/EmptyExampleGroup:
+  Enabled: false
+
 # Because of the way that blocks are used in RSpecs can end up being long when
 # example groups are nested or many examples are checked.
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+
+RSpec/ExpectInHook:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
