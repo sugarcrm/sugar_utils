@@ -33,6 +33,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'yard',               '~> 0.9.0'
   spec.add_development_dependency 'yardstick',          '~> 0.9.9'
 
-  spec.add_development_dependency 'codeclimate-test-reporter'
   spec.add_development_dependency 'rubocop'
 end

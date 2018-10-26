@@ -4,7 +4,6 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
-  - 2.6
   - ruby-head
 matrix:
   allow_failures:
@@ -15,5 +14,10 @@ os:
   - linux
   - osx
 sudo: false
-after_success:
-  - bundle exec codeclimate-test-reporter
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64 > ./cc-test-reporter ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter ; fi
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
