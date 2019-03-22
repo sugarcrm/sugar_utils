@@ -119,18 +119,35 @@ describe SugarUtils::File do
 
     let(:filename) { 'path1/path2/filename' }
 
-    inputs            :options # rubocop:disable ExtraSpacing, SpaceBeforeFirstArg
-    side_effects_with([])                     { expect(File.exist?(filename)).to eq(true) }
-    side_effects_with([{ owner: 'nobody' }])  { expect(filename).to have_owner('nobody') }
-    side_effects_with([{ group: 'nogroup' }]) { expect(filename).to have_group('nogroup') }
-    side_effects_with([{ mode: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
-    side_effects_with([{ perm: 0o600 }])      { expect(filename).to have_file_permission(0o100600) }
-    side_effects_with([{ mtime: 0 }])         { expect(filename).to have_mtime(0) }
-    side_effects_with([{ owner: 'nobody', group: 'nogroup', mode: 0o600, mtime: 0 }]) do
-      expect(filename).to have_owner('nobody')
-      expect(filename).to have_group('nogroup')
-      expect(filename).to have_file_permission(0o100600)
-      expect(filename).to have_mtime(0)
+    context 'without options' do
+      let(:options) { [] }
+
+      it { expect_not_to_raise_error }
+      its_side_effects_are { expect(File.exist?(filename)).to eq(true) }
+    end
+
+    context 'with options, and :mode key' do
+      let(:options) { [{ owner: 'nobody', group: 'nogroup', mode: 0o600, mtime: 0 }] }
+
+      it { expect_not_to_raise_error }
+      its_side_effects_are do
+        expect(filename).to have_owner('nobody')
+        expect(filename).to have_group('nogroup')
+        expect(filename).to have_file_permission(0o100600)
+        expect(filename).to have_mtime(0)
+      end
+    end
+
+    context 'with options, and :perm key' do
+      let(:options) { [{ owner: 'nobody', group: 'nogroup', perm: 0o600, mtime: 0 }] }
+
+      it { expect_not_to_raise_error }
+      its_side_effects_are do
+        expect(filename).to have_owner('nobody')
+        expect(filename).to have_group('nogroup')
+        expect(filename).to have_file_permission(0o100600)
+        expect(filename).to have_mtime(0)
+      end
     end
   end
 
@@ -170,44 +187,39 @@ describe SugarUtils::File do
       it { expect_raise_error("Unable to write #{filename} because it is locked") }
     end
 
-    context 'when unlocked' do
-      shared_examples_for 'file is written' do # rubocop:disable RSpec/SharedContext
+    shared_examples_for 'file is correctly written' do
+      before do
+        expect(described_class).to receive(:flock_exclusive)
+          .with(kind_of(File), options)
+      end
+
+      # rubocop:disable RSpec/NestedGroups
+      context 'without options' do
+        let(:options) { {} }
+
+        it { expect_not_to_raise_error }
+        its_side_effects_are do
+          expect(filename).to have_content(data)
+          expect(filename).to have_file_permission(0o100644)
+        end
+      end
+
+      context 'with options' do
+        let(:options) do
+          { flush: true, owner: 'nobody', group: 'nogroup', mode_or_perm_key => 0o600 }
+        end
+
         before do
-          expect(described_class).to receive(:flock_exclusive)
-            .with(kind_of(File), options)
+          # rubocop:disable RSpec/AnyInstance
+          expect_any_instance_of(File).to receive(:flush)
+          expect_any_instance_of(File).to receive(:fsync)
+          # rubocop:enable RSpec/AnyInstance
         end
 
-        # rubocop:disable RSpec/NestedGroups
-        context 'without options' do
-          let(:options) { {} }
+        context 'with mode key' do
+          let(:mode_or_perm_key) { :mode }
 
-          its_side_effects_are do
-            expect(filename).to have_content(data)
-            expect(filename).to have_file_permission(0o100644)
-          end
-        end
-
-        context 'with deprecated options' do
-          let(:options) { { mode: 0o600 } }
-
-          its_side_effects_are do
-            expect(filename).to have_content(data)
-            expect(filename).to have_file_permission(0o100600)
-          end
-        end
-
-        context 'without deprecated options' do
-          let(:options) do
-            { flush: true, owner: 'nobody', group: 'nogroup', mode: 'w', perm: 0o600 }
-          end
-
-          before do
-            # rubocop:disable RSpec/AnyInstance
-            expect_any_instance_of(File).to receive(:flush)
-            expect_any_instance_of(File).to receive(:fsync)
-            # rubocop:enable RSpec/AnyInstance
-          end
-
+          it { expect_not_to_raise_error }
           its_side_effects_are do
             expect(filename).to have_content(data)
             expect(filename).to have_owner('nobody')
@@ -215,33 +227,30 @@ describe SugarUtils::File do
             expect(filename).to have_file_permission(0o100600)
           end
         end
-        # rubocop:enable RSpec/NestedGroups
-      end
 
-      # rubocop:disable RSpec/NestedGroups
-      context 'when file does not exist' do
-        it_behaves_like 'file is written'
-      end
+        context 'with perm key' do
+          let(:mode_or_perm_key) { :perm }
 
-      context 'when file exists' do
-        before { write(filename, 'foobar', 0o777) }
-
-        context 'when not locked' do
-          it_behaves_like 'file is written'
-
-          context 'with append mode' do
-            let(:options) { { mode: 'a+' } }
-
-            before do
-              expect(described_class).to receive(:flock_exclusive)
-                .with(kind_of(File), options)
-            end
-
-            its_side_effects_are { expect(filename).to have_content("foobar#{data}") }
+          it { expect_not_to_raise_error }
+          its_side_effects_are do
+            expect(filename).to have_content(data)
+            expect(filename).to have_owner('nobody')
+            expect(filename).to have_group('nogroup')
+            expect(filename).to have_file_permission(0o100600)
           end
         end
       end
       # rubocop:enable RSpec/NestedGroups
+    end
+
+    context 'when file does not exist' do
+      it_behaves_like 'file is correctly written'
+    end
+
+    context 'when file exists' do
+      before { write(filename, 'foobar', 0o777) }
+
+      it_behaves_like 'file is correctly written'
     end
   end
 
@@ -295,7 +304,7 @@ describe SugarUtils::File do
       it { expect_raise_error("Unable to write #{filename} because it is locked") }
     end
 
-    shared_examples_for 'file is correctly appended' do # rubocop:disable RSpec/SharedContext
+    shared_examples_for 'file is correctly appended' do
       before do
         expect(described_class).to receive(:flock_exclusive)
           .with(kind_of(File), options)
@@ -314,7 +323,7 @@ describe SugarUtils::File do
 
       context 'with options' do
         let(:options) do
-          { flush: true, owner: 'nobody', group: 'nogroup', perm: 0o600 }
+          { flush: true, owner: 'nobody', group: 'nogroup', mode_or_perm_key => 0o600 }
         end
 
         before do

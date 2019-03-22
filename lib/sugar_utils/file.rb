@@ -101,11 +101,13 @@ module SugarUtils
       raise(Error, "Cannot parse #{filename}")
     end
 
+    # Touch the specified file.
+    #
     # @param filename [String]
     # @param options [Hash]
     # @option options [String, Integer] :owner
     # @option options [String, Integer] :group
-    # @option options [Integer] :mode @deprecated
+    # @option options [Integer] :mode
     # @option options [Integer] :perm
     # @option options [Integer] :mtime
     #
@@ -113,13 +115,8 @@ module SugarUtils
     def self.touch(filename, options = {})
       owner         = options[:owner]
       group         = options[:group]
-      perm          = options[:perm]
+      perm          = options[:mode] || options[:perm]
       touch_options = options.select { |k| %i[mtime].include?(k) }
-
-      if options[:mode].is_a?(Integer)
-        perm = options[:mode]
-        deprecate_option(:touch, :mode, :perm, 2018, 7)
-      end
 
       FileUtils.mkdir_p(::File.dirname(filename))
       FileUtils.touch(filename, touch_options)
@@ -127,6 +124,15 @@ module SugarUtils
       FileUtils.chmod(perm, filename) if perm
     end
 
+    # Write to an existing file, overwriting it, or create the file if it does
+    # not exist.
+    #
+    # @note Either option :mode or :perm can be used to specific the permissions
+    # on the file being written to. This aliasing is used because both these
+    # names are used in the standard library, File.open uses :perm and FileUtils
+    # uses :mode. The user can choose whichever alias makes their code most
+    # readable.
+    #
     # @param filename [String]
     # @param data [#to_s]
     # @param options [Hash]
@@ -134,7 +140,7 @@ module SugarUtils
     # @option options [Boolean] :flush (false)
     # @option options [String, Integer] :owner
     # @option options [String, Integer] :group
-    # @option options [String] :mode (w+)
+    # @option options [Integer] :mode (0o644)
     # @option options [Integer] :perm (0o644)
     #
     # @raise [SugarUtils::File::Error]
@@ -144,19 +150,21 @@ module SugarUtils
       flush = options[:flush] || false
       owner = options[:owner]
       group = options[:group]
-      perm  = options[:perm] || 0o644
-      mode  = 'w+'
+      # NOTE: We are using the variable name 'perm' because that is the name of
+      # the argument used by File.open.
+      perm  = options[:mode] || options[:perm] || 0o644
 
-      if options[:mode].is_a?(Integer)
-        perm = options[:mode]
-
-        deprecate_option(:write, :mode, ' with an integer value; use perm instead', 2018, 7)
-      elsif !options[:mode].nil?
-        mode = options[:mode]
+      # If the file exists and ownership or permissions are not specified, then
+      # preserve those values from the original file.
+      if ::File.exist?(filename)
+        file_stat = ::File::Stat.new(filename)
+        owner ||= file_stat.uid
+        group ||= file_stat.gid
+        perm  ||= file.mode
       end
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      ::File.open(filename, mode, perm) do |file|
+      ::File.open(filename, 'w+', perm) do |file|
         flock_exclusive(file, options)
 
         file.puts(data.to_s)
@@ -180,12 +188,23 @@ module SugarUtils
       raise(Error, "Unable to write #{filename} with #{boom}")
     end
 
-    # @param filename [String] filename
-    # @param data [#to_json] data
-    # @param options [Hash] options
+    # Write the data parameter as JSON to the filename path.
+    #
+    # @note Either option :mode or :perm can be used to specific the permissions
+    # on the file being written to. This aliasing is used because both these
+    # names are used in the standard library, File.open uses :perm and FileUtils
+    # uses :mode. The user can choose whichever alias makes their code most
+    # readable.
+    #
+    # @param filename [String]
+    # @param data [#to_json]
+    # @param options [Hash]
     # @option options [Integer] :timeout (10)
     # @option options [Boolean] :flush (false)
-    # @option options [Integer] :perm (0644)
+    # @option options [String, Integer] :owner
+    # @option options [String, Integer] :group
+    # @option options [Integer] :mode (0o644)
+    # @option options [Integer] :perm (0o644)
     #
     # @raise [SugarUtils::File::Error]
     #
