@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - SugarUtils::File.append, which is explicitly for appending to a file. It will
   also create a new file if it does not yet exist
+### Removed
+- append support in SugarUtils::File.write (could have been specified by { mode: 'a })
+### Changed
+- :mode and :perm are now aliases for setting permissions on files in all the
+  related methods (i.e., .write, .write_json, .touch, .append)
 
 ## [0.5.0] - 2018-05-01
 ### Changed
