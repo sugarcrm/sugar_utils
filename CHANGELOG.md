@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- SugarUtils::File.append, which is explicitly for appending to a file. It will
+  also create a new file if it does not yet exist
 
 ## [0.5.0] - 2018-05-01
 ### Changed
