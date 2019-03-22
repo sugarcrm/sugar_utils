@@ -259,11 +259,122 @@ describe SugarUtils::File do
     it_has_side_effects
   end
 
+  describe '.append', :fakefs do
+    subject { described_class.append(filename, data, options) }
+
+    let(:data)      { 'content' }
+    let(:filename)  { 'dir1/dir2/filename' }
+
+    context 'when SystemCallError' do
+      let(:options) { {} }
+      let(:exception) { SystemCallError.new(nil) }
+
+      before { allow(File).to receive(:open).and_raise(exception) }
+
+      it { expect_raise_error("Unable to write #{filename} with #{exception}") }
+    end
+
+    context 'when IOError' do
+      let(:options) { {} }
+      let(:exception) { IOError.new(nil) }
+
+      before { allow(File).to receive(:open).and_raise(exception) }
+
+      it { expect_raise_error("Unable to write #{filename} with #{exception}") }
+    end
+
+    context 'when locked' do
+      let(:options) { {} }
+
+      before do
+        expect(described_class).to receive(:flock_exclusive)
+          .with(kind_of(File), options)
+          .and_raise(Timeout::Error)
+      end
+
+      it { expect_raise_error("Unable to write #{filename} because it is locked") }
+    end
+
+    shared_examples_for 'file is correctly appended' do # rubocop:disable RSpec/SharedContext
+      before do
+        expect(described_class).to receive(:flock_exclusive)
+          .with(kind_of(File), options)
+      end
+
+      # rubocop:disable RSpec/NestedGroups
+      context 'without options' do
+        let(:options) { {} }
+
+        it { expect_not_to_raise_error }
+        its_side_effects_are do
+          expect(filename).to have_content(expected_file_data)
+          expect(filename).to have_file_permission(0o100644)
+        end
+      end
+
+      context 'with options' do
+        let(:options) do
+          { flush: true, owner: 'nobody', group: 'nogroup', perm: 0o600 }
+        end
+
+        before do
+          # rubocop:disable RSpec/AnyInstance
+          expect_any_instance_of(File).to receive(:flush)
+          expect_any_instance_of(File).to receive(:fsync)
+          # rubocop:enable RSpec/AnyInstance
+        end
+
+        context 'with mode key' do
+          let(:mode_or_perm_key) { :mode }
+
+          it { expect_not_to_raise_error }
+          its_side_effects_are do
+            expect(filename).to have_content(expected_file_data)
+            expect(filename).to have_owner('nobody')
+            expect(filename).to have_group('nogroup')
+            expect(filename).to have_file_permission(0o100600)
+          end
+        end
+
+        context 'with perm key' do
+          let(:mode_or_perm_key) { :perm }
+
+          it { expect_not_to_raise_error }
+          its_side_effects_are do
+            expect(filename).to have_content(expected_file_data)
+            expect(filename).to have_owner('nobody')
+            expect(filename).to have_group('nogroup')
+            expect(filename).to have_file_permission(0o100600)
+          end
+        end
+      end
+      # rubocop:enable RSpec/NestedGroups
+    end
+
+    context 'when file does not exist' do
+      let(:expected_file_data) { data }
+
+      it_behaves_like 'file is correctly appended'
+    end
+
+    context 'when file exists' do
+      let(:expected_file_data) { "foobar#{data}" }
+
+      before { write(filename, 'foobar', 0o777) }
+
+      it_behaves_like 'file is correctly appended'
+    end
+  end
+
   ##############################################################################
 
   # @param message [String]
   def expect_raise_error(message)
     expect { subject }.to raise_error(described_class::Error, message)
+  end
+
+  def expect_not_to_raise_error
+    expect { subject }.not_to raise_error
   end
 
   # @overload write(filename, content)

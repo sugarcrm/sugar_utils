@@ -194,6 +194,69 @@ module SugarUtils
       write(filename, MultiJson.dump(data, pretty: true), options)
     end
 
+    # Append to an existing file, or create the file if it does not exist.
+    #
+    # @note Either option :mode or :perm can be used to specific the permissions
+    # on the file being written to. This aliasing is used because both these
+    # names are used in the standard library, File.open uses :perm and FileUtils
+    # uses :mode. The user can choose whichever alias makes their code most
+    # readable.
+    #
+    # @param filename [String]
+    # @param data [#to_s]
+    # @param options [Hash]
+    # @option options [Integer] :timeout (10)
+    # @option options [Boolean] :flush (false)
+    # @option options [String, Integer] :owner
+    # @option options [String, Integer] :group
+    # @option options [Integer] :mode (0o644)
+    # @option options [Integer] :perm (0o644)
+    #
+    # @raise [SugarUtils::File::Error]
+    #
+    # @return [void]
+    def self.append(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity
+      flush = options[:flush] || false
+      owner = options[:owner]
+      group = options[:group]
+      # NOTE: We are using the variable name 'perm' because that is the name of
+      # the argument used by File.open.
+      perm  = options[:mode] || options[:perm] || 0o644
+
+      # If the file exists and ownership or permissions are not specified, then
+      # preserve those values from the original file.
+      if ::File.exist?(filename)
+        file_stat = ::File::Stat.new(filename)
+        owner ||= file_stat.uid
+        group ||= file_stat.gid
+        perm  ||= file.mode
+      end
+
+      FileUtils.mkdir_p(::File.dirname(filename))
+      ::File.open(filename, 'a', perm) do |file|
+        flock_exclusive(file, options)
+
+        file.puts(data.to_s)
+
+        # Flush and fsync to be 100% sure we write this data out now because we
+        # are often reading it immediately and if the OS is buffering, it is
+        # possible we might read it before it is been physically written to
+        # disk. We are not worried about speed here, so this should be OKAY.
+        if flush
+          file.flush
+          file.fsync
+        end
+
+        # Ensure that the permissions are correct if the file already existed.
+        file.chmod(perm)
+      end
+      FileUtils.chown(owner, group, filename)
+    rescue Timeout::Error
+      raise(Error, "Unable to write #{filename} because it is locked")
+    rescue SystemCallError, IOError => boom
+      raise(Error, "Unable to write #{filename} with #{boom}")
+    end
+
     ############################################################################
 
     # Following the same pattern as the existing stdlib method deprecation

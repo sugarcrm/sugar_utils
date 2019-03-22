@@ -19,6 +19,7 @@ These methods are included:
 * SugarUtils::File.write
 * SugarUtils::File.read_json
 * SugarUtils::File.write_json
+* SugarUtils::File.append
 
 These methods will probably be included in the future:
 
