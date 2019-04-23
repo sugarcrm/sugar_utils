@@ -3,6 +3,7 @@
 require 'sugar_utils/version'
 require 'sugar_utils/file'
 
+# @api
 module SugarUtils
   # @param value [Object]
   #

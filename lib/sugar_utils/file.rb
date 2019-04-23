@@ -5,7 +5,10 @@ require 'fileutils'
 require 'multi_json'
 require 'timeout'
 
+require 'sugar_utils/file/write_options'
+
 module SugarUtils
+  # @api
   module File # rubocop:disable Metrics/ModuleLength
     class Error < StandardError; end
 
@@ -113,14 +116,12 @@ module SugarUtils
     #
     # @return [void]
     def self.touch(filename, options = {})
-      owner         = options[:owner]
-      group         = options[:group]
-      perm          = options[:mode] || options[:perm]
-      touch_options = options.select { |k| %i[mtime].include?(k) }
+      write_options = WriteOptions.new(filename, options)
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      FileUtils.touch(filename, touch_options)
-      FileUtils.chown(owner, group, filename)
+      FileUtils.touch(filename, write_options.slice(:mtime))
+      FileUtils.chown(write_options.owner, write_options.group, filename)
+      perm = write_options.perm(nil)
       FileUtils.chmod(perm, filename) if perm
     end
 
@@ -146,24 +147,11 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
-    def self.write(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity
-      flush = options[:flush] || false
-      owner = options[:owner]
-      group = options[:group]
-      # NOTE: We are using the variable name 'perm' because that is the name of
-      # the argument used by File.open.
-      perm  = options[:mode] || options[:perm] || 0o644
-
-      # If the file exists and the ownership is not specified, then preserve
-      # those values from the original file.
-      if ::File.exist?(filename)
-        file_stat = ::File::Stat.new(filename)
-        owner ||= file_stat.uid
-        group ||= file_stat.gid
-      end
+    def self.write(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize
+      write_options = WriteOptions.new(filename, options)
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      ::File.open(filename, 'w+', perm) do |file|
+      ::File.open(filename, 'w+', write_options.perm) do |file|
         flock_exclusive(file, options)
 
         file.puts(data.to_s)
@@ -172,15 +160,15 @@ module SugarUtils
         # are often reading it immediately and if the OS is buffering, it is
         # possible we might read it before it is been physically written to
         # disk. We are not worried about speed here, so this should be OKAY.
-        if flush
+        if write_options.flush?
           file.flush
           file.fsync
         end
 
         # Ensure that the permissions are correct if the file already existed.
-        file.chmod(perm)
+        file.chmod(write_options.perm)
       end
-      FileUtils.chown(owner, group, filename)
+      FileUtils.chown(write_options.owner, write_options.group, filename)
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
     rescue SystemCallError, IOError => e
@@ -233,24 +221,11 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
-    def self.append(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity
-      flush = options[:flush] || false
-      owner = options[:owner]
-      group = options[:group]
-      # NOTE: We are using the variable name 'perm' because that is the name of
-      # the argument used by File.open.
-      perm  = options[:mode] || options[:perm] || 0o644
-
-      # If the file exists and ownership or permissions are not specified, then
-      # preserve those values from the original file.
-      if ::File.exist?(filename)
-        file_stat = ::File::Stat.new(filename)
-        owner ||= file_stat.uid
-        group ||= file_stat.gid
-      end
+    def self.append(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize
+      write_options = WriteOptions.new(filename, options)
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      ::File.open(filename, 'a', perm) do |file|
+      ::File.open(filename, 'a', write_options.perm) do |file|
         flock_exclusive(file, options)
 
         file.puts(data.to_s)
@@ -259,15 +234,15 @@ module SugarUtils
         # are often reading it immediately and if the OS is buffering, it is
         # possible we might read it before it is been physically written to
         # disk. We are not worried about speed here, so this should be OKAY.
-        if flush
+        if write_options.flush?
           file.flush
           file.fsync
         end
 
         # Ensure that the permissions are correct if the file already existed.
-        file.chmod(perm)
+        file.chmod(write_options.perm)
       end
-      FileUtils.chown(owner, group, filename)
+      FileUtils.chown(write_options.owner, write_options.group, filename)
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
     rescue SystemCallError, IOError => e
