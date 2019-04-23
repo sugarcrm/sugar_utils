@@ -154,13 +154,12 @@ module SugarUtils
       # the argument used by File.open.
       perm  = options[:mode] || options[:perm] || 0o644
 
-      # If the file exists and ownership or permissions are not specified, then
-      # preserve those values from the original file.
+      # If the file exists and the ownership is not specified, then preserve
+      # those values from the original file.
       if ::File.exist?(filename)
         file_stat = ::File::Stat.new(filename)
         owner ||= file_stat.uid
         group ||= file_stat.gid
-        perm  ||= file.mode
       end
 
       FileUtils.mkdir_p(::File.dirname(filename))
@@ -248,7 +247,6 @@ module SugarUtils
         file_stat = ::File::Stat.new(filename)
         owner ||= file_stat.uid
         group ||= file_stat.gid
-        perm  ||= file.mode
       end
 
       FileUtils.mkdir_p(::File.dirname(filename))
