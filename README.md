@@ -13,6 +13,7 @@ These methods are included:
 
 * SugarUtils.ensure_boolean
 * SugarUtils.ensure_integer
+* SugarUtils.scrub_encoding
 * SugarUtils::File.flock_shared
 * SugarUtils::File.flock_exclusive
 * SugarUtils::File.read

@@ -59,7 +59,7 @@ describe SugarUtils::File do
     end
 
     context 'when file present' do
-      before { write('filename', "foo\x92bar") }
+      before { write('filename', 'foobar') }
 
       # rubocop:disable RSpec/NestedGroups
       context 'when locked' do
@@ -80,15 +80,15 @@ describe SugarUtils::File do
         before do
           expect(described_class).to receive(:flock_shared)
             .with(kind_of(File), options)
+          allow(SugarUtils).to receive(:scrub_encoding)
+            .with('foobar', scrub_encoding)
+            .and_return(:scrubbed_data)
         end
 
         inputs  :scrub_encoding
-        it_with nil,            "foo\x92bar"
-        it_with false,          "foo\x92bar"
-        it_with true,           'foobar'
-        it_with '',             'foobar'
-        it_with 'x',            'fooxbar'
-        it_with 'xxx',          'fooxxxbar'
+        it_with nil,             'foobar'
+        it_with false,           'foobar'
+        it_with :scrub_encoding, :scrubbed_data
       end
       # rubocop:enable RSpec/NestedGroups
     end

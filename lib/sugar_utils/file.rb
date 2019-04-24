@@ -48,7 +48,7 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [String]
-    def self.read(filename, options = {}) # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity, PerceivedComplexity
+    def self.read(filename, options = {}) # rubocop:disable MethodLength
       options[:value_on_missing] ||= ''
       options[:raise_on_missing] = true if options[:raise_on_missing].nil?
 
@@ -60,23 +60,7 @@ module SugarUtils
 
       return result unless options[:scrub_encoding]
 
-      replacement_character =
-        if options[:scrub_encoding].is_a?(String)
-          options[:scrub_encoding]
-        else
-          ''
-        end
-      if result.respond_to?(:scrub)
-        result.scrub(replacement_character)
-      else
-        result.encode(
-          result.encoding,
-          'binary',
-          invalid: :replace,
-          undef:   :replace, # rubocop:disable Layout/AlignHash
-          replace: replacement_character
-        )
-      end
+      SugarUtils.scrub_encoding(result, options[:scrub_encoding])
     rescue SystemCallError, IOError
       raise(Error, "Cannot read #{filename}") if options[:raise_on_missing]
 

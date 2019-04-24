@@ -36,4 +36,22 @@ describe SugarUtils do
     it_with          '123',              123
     it_with          '123.234',          123
   end
+
+  describe '.scrub_encoding' do
+    subject { described_class.scrub_encoding(data, *args) }
+
+    inputs  :data,            :args
+    it_with 'foobar',         [],      'foobar'
+    it_with 'foobar',         [nil],   'foobar'
+    it_with 'foobar',         [111],   'foobar'
+    it_with 'foobar',         [''],    'foobar'
+    it_with 'foobar',         ['x'],   'foobar'
+    it_with 'foobar',         ['xxx'], 'foobar'
+    it_with "foo\x92bar\x93", [],      'foobar'
+    it_with "foo\x92bar\x93", [nil],   'foobar'
+    it_with "foo\x92bar\x93", [111],   'foobar'
+    it_with "foo\x92bar\x93", [''],    'foobar'
+    it_with "foo\x92bar\x93", ['x'],   'fooxbarx'
+    it_with "foo\x92bar\x93", ['xxx'], 'fooxxxbarxxx'
+  end
 end
