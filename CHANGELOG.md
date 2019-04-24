@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - SugarUtils::File.append, which is explicitly for appending to a file. It will
   also create a new file if it does not yet exist
+- SugarUtils::scrub_encoding, which is used for cleaning badly encoded
+  characters out of a string
 ### Removed
 - append support in SugarUtils::File.write (could have been specified by { mode: 'a })
 ### Changed

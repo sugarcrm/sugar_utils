@@ -26,4 +26,30 @@ module SugarUtils
 
     Float(value).to_i
   end
+
+  # @overload scrub_encoding(data)
+  #   Scrub the string's encoding, and replace any bad characters with ''.
+  #   @param data [String]
+  # @overload scrub_encoding(data, replacement_character)
+  #   Scrub the string's encoding, and replace any bad characters with the
+  #   specified character.
+  #   @param data [String]
+  #   @param replacement_character [String]
+  #
+  # @return [String]
+  def self.scrub_encoding(data, replacement_character = nil)
+    replacement_character = '' unless replacement_character.is_a?(String)
+
+    # If the Ruby version being used supports String#scrub, then just use it.
+    return data.scrub(replacement_character) if data.respond_to?(:scrub)
+
+    # Otherwise, fall back to String#encode.
+    data.encode(
+      data.encoding,
+      'binary',
+      invalid: :replace,
+      undef:   :replace, # rubocop:disable Layout/AlignHash
+      replace: replacement_character
+    )
+  end
 end
