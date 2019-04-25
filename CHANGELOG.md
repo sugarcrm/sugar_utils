@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   also create a new file if it does not yet exist
 - SugarUtils::scrub_encoding, which is used for cleaning badly encoded
   characters out of a string
+- SugarUtils::File.change_access, a wrapper for changing ownership and
+  permissions of a file
 ### Removed
 - append support in SugarUtils::File.write (could have been specified by { mode: 'a })
 ### Changed

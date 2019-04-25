@@ -16,6 +16,7 @@ These methods are included:
 * SugarUtils.scrub_encoding
 * SugarUtils::File.flock_shared
 * SugarUtils::File.flock_exclusive
+* SugarUtils::File.change_access
 * SugarUtils::File.read
 * SugarUtils::File.write
 * SugarUtils::File.read_json

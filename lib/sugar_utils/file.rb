@@ -36,6 +36,32 @@ module SugarUtils
       Timeout.timeout(timeout) { file.flock(::File::LOCK_EX) }
     end
 
+    # Change all of the access values for the specified file including:
+    # * owner
+    # * group
+    # * permissions
+    #
+    # @note Although the are all required, nil can be passed to any of them and
+    # those nils will be skipped. Hopefully, this will avoid conditions in the
+    # calling code because the optional parameters will just be passed in and
+    # skipped when they are missing.
+    #
+    # @param filename [String]
+    # @param owner [nil, Integer, String]
+    # @param group [nil, Integer, String]
+    # @param permission [nil, Integer]
+    #
+    # @raise [SugarUtils::File::Error]
+    #
+    # @return [void]
+    def self.change_access(filename, owner, group, permission)
+      FileUtils.chown(owner, group, filename)
+      FileUtils.chmod(permission, filename) if permission
+      nil
+    rescue SystemCallError, IOError
+      raise(Error, "Unable to change access on #{filename}")
+    end
+
     # @param filename [String]
     # @param options [Hash]
     # @option options [Integer] :timeout (10)
@@ -104,9 +130,12 @@ module SugarUtils
 
       FileUtils.mkdir_p(::File.dirname(filename))
       FileUtils.touch(filename, write_options.slice(:mtime))
-      FileUtils.chown(write_options.owner, write_options.group, filename)
-      perm = write_options.perm(nil)
-      FileUtils.chmod(perm, filename) if perm
+      change_access(
+        filename,
+        write_options.owner,
+        write_options.group,
+        write_options.perm(nil)
+      )
     end
 
     # Write to an existing file, overwriting it, or create the file if it does
@@ -148,11 +177,14 @@ module SugarUtils
           file.flush
           file.fsync
         end
-
-        # Ensure that the permissions are correct if the file already existed.
-        file.chmod(write_options.perm)
       end
-      FileUtils.chown(write_options.owner, write_options.group, filename)
+
+      change_access(
+        filename,
+        write_options.owner,
+        write_options.group,
+        write_options.perm
+      )
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
     rescue SystemCallError, IOError => e
@@ -222,11 +254,14 @@ module SugarUtils
           file.flush
           file.fsync
         end
-
-        # Ensure that the permissions are correct if the file already existed.
-        file.chmod(write_options.perm)
       end
-      FileUtils.chown(write_options.owner, write_options.group, filename)
+
+      change_access(
+        filename,
+        write_options.owner,
+        write_options.group,
+        write_options.perm
+      )
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
     rescue SystemCallError, IOError => e
