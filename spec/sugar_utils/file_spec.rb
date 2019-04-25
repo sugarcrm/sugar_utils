@@ -35,6 +35,65 @@ describe SugarUtils::File do
     side_effects_with Hash[timeout: 5],   5
   end
 
+  describe '.change_access', :fakefs do
+    subject do
+      described_class.change_access(filename, owner, group, permission)
+    end
+
+    let(:filename) { 'filename' }
+
+    context 'when file does not exist' do
+      let(:owner)      { 'nobody' }
+      let(:group)      { 'nogroup' }
+      let(:permission) { 0o777 }
+
+      it { expect_raise_error("Unable to change access on #{filename}") }
+    end
+
+    context 'when file exists' do
+      before { write(filename, 'foobar') }
+
+      context 'with no values specified' do # rubocop:disable RSpec/NestedGroups
+        let(:owner)      { nil }
+        let(:group)      { nil }
+        let(:permission) { nil }
+
+        it { expect_not_to_raise_error }
+        its_side_effects_are do
+          expect(filename).not_to have_owner('nobody')
+          expect(filename).not_to have_group('nogroup')
+          expect(filename).not_to have_file_permission(0o100777)
+        end
+      end
+
+      context 'with all values(Integer) specified' do # rubocop:disable RSpec/NestedGroups
+        let(:owner)      { Etc.getpwnam('nobody').uid }
+        let(:group)      { Etc.getgrnam('nogroup').gid }
+        let(:permission) { 0o777 }
+
+        it { expect_not_to_raise_error }
+        its_side_effects_are do
+          expect(filename).to have_owner('nobody')
+          expect(filename).to have_group('nogroup')
+          expect(filename).to have_file_permission(0o100777)
+        end
+      end
+
+      context 'with all values specified' do # rubocop:disable RSpec/NestedGroups
+        let(:owner)      { 'nobody' }
+        let(:group)      { 'nogroup' }
+        let(:permission) { 0o777 }
+
+        it { expect_not_to_raise_error }
+        its_side_effects_are do
+          expect(filename).to have_owner('nobody')
+          expect(filename).to have_group('nogroup')
+          expect(filename).to have_file_permission(0o100777)
+        end
+      end
+    end
+  end
+
   describe '.read', :fakefs do
     subject { described_class.read('filename', options) }
 
