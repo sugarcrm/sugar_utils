@@ -6,7 +6,7 @@ require 'multi_json'
 require 'timeout'
 
 module SugarUtils
-  module File
+  module File # rubocop:disable Metrics/ModuleLength
     class Error < StandardError; end
 
     # @param file [File]
@@ -183,8 +183,8 @@ module SugarUtils
       FileUtils.chown(owner, group, filename)
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
-    rescue SystemCallError, IOError => boom
-      raise(Error, "Unable to write #{filename} with #{boom}")
+    rescue SystemCallError, IOError => e
+      raise(Error, "Unable to write #{filename} with #{e}")
     end
 
     # Write the data parameter as JSON to the filename path.
@@ -270,8 +270,8 @@ module SugarUtils
       FileUtils.chown(owner, group, filename)
     rescue Timeout::Error
       raise(Error, "Unable to write #{filename} because it is locked")
-    rescue SystemCallError, IOError => boom
-      raise(Error, "Unable to write #{filename} with #{boom}")
+    rescue SystemCallError, IOError => e
+      raise(Error, "Unable to write #{filename} with #{e}")
     end
 
     ############################################################################

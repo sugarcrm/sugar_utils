@@ -34,7 +34,9 @@ Gem::Specification.new do |spec|
   # without limiting.
   spec.add_development_dependency 'bundler-audit'
   spec.add_development_dependency 'license_finder'
-  spec.add_development_dependency 'rubocop'
+  # HACK: Limit ourselves to Rubocop versions which still support Ruby2.2. This
+  # can be removed once we drop support for Ruby2.2.
+  spec.add_development_dependency 'rubocop', '~> 0.68.0'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'yard'

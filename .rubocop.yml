@@ -16,8 +16,10 @@ RSpec/EmptyExampleGroup:
 
 # Because of the way that blocks are used in RSpecs can end up being long when
 # example groups are nested or many examples are checked.
+# A similar pattern exists in the DSL for gemspec files.
 Metrics/BlockLength:
   Exclude:
+    - '*.gemspec'
     - 'spec/**/*'
 
 RSpec/ExpectInHook:
