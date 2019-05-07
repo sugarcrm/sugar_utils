@@ -16,6 +16,7 @@ require 'simplecov'
 SimpleCov.start
 
 require 'sugar_utils'
+MultiJson.use(:ok_json)
 
 SolidAssert.enable_assertions
 
