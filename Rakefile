@@ -2,6 +2,8 @@
 
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
+require 'cucumber'
+require 'cucumber/rake/task'
 require 'rubocop/rake_task'
 require 'bundler/audit/task'
 require 'yard'
@@ -12,6 +14,9 @@ require 'English'
 
 RSpec::Core::RakeTask.new(:spec) do |task|
   # task.rspec_opts = '--warnings'
+end
+
+Cucumber::Rake::Task.new(:features) do |task|
 end
 
 RuboCop::RakeTask.new(:rubocop) do |task|
@@ -48,4 +53,4 @@ Yardstick::Rake::Measurement.new(:yardstick_measure) do |measurement|
   measurement.output = 'tmp/yard_coverage.txt'
 end
 
-task default: %i[spec rubocop yardstick_measure bundle:audit license_finder]
+task default: %i[spec features rubocop yardstick_measure bundle:audit license_finder]

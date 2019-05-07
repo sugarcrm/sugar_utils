@@ -80,7 +80,7 @@ RSpec::Matchers.define :have_mtime do |expected|
   match do |actual|
     next false unless File.exist?(actual)
 
-    @actual   = File.stat(actual).mtime
+    @actual   = File.stat(actual).mtime.to_i
     @expected = expected
     values_match?(@expected, @actual)
   end
