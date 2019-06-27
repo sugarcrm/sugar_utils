@@ -4,8 +4,11 @@
 [![Build Status](https://travis-ci.org/sugarcrm/sugar_utils.svg?branch=master)](https://travis-ci.org/sugarcrm/sugar_utils)
 [![Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/gpa.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils)
 [![Test Coverage](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/coverage.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils/coverage)
-[![Inline docs](http://inch-ci.org/github/sugarcrm/sugar_utils.svg)](http://inch-ci.org/github/sugarcrm/sugar_utils)
 [![License](http://img.shields.io/badge/license-Apache2-green.svg?style=flat)](LICENSE)
+
+[![Inline docs](http://inch-ci.org/github/sugarcrm/sugar_utils.svg)](http://inch-ci.org/github/sugarcrm/sugar_utils)
+[![RubyDoc](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://rubydoc.org/gems/sugar_utils)
+[![CucumberPro](https://img.shields.io/badge/cucumber.pro-sugar_utils-3d10af.svg)](https://app.cucumber.pro/projects/sugar_utils)
 
 Utility methods extracted from SugarCRM Ruby projects.
 
