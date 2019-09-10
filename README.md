@@ -63,6 +63,21 @@ These methods might be added in the future:
 * http_get_file
 * timeout_retry
 
+## Elsewhere on the web
+
+Links to other places on the web where this projects exists:
+
+* [Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils)
+* [CucumberPro](https://app.cucumber.pro/projects/sugar_utils)
+* [InchCI](http://inch-ci.org/github/sugarcrm/sugar_utils)
+* [Github](https://github.com/sugarcrm/sugar_utils)
+* [OpenHub](https://www.openhub.net/p/sugar_utils)
+* [RubyDoc](http://rubydoc.org/gems/sugar_utils)
+* [RubyGems](https://rubygems.org/gems/sugar_utils)
+* [Ruby LibHunt](https://ruby.libhunt.com/sugar_utils-alternatives)
+* [Ruby Toolbox](https://www.ruby-toolbox.com/projects/sugar_utils)
+* [TravisCI](https://travis-ci.org/sugarcrm/sugar_utils)
+
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md) for how you can contribute changes back into this project.
