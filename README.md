@@ -27,20 +27,6 @@ These methods are included:
 * SugarUtils::File.write_json
 * SugarUtils::File.append
 
-These methods will probably be included in the future:
-
-* sizeof_dir
-* find_files
-* find_file!
-* gzip
-* gunzip
-* tarball
-* untarball
-* tarball_list
-* encrypt
-* http_get_file
-* timeout_retry
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -60,6 +46,22 @@ Or install it yourself as:
 ```bash
 $ gem install sugar_utils
 ```
+
+## Roadmap
+
+These methods might be added in the future:
+
+* sizeof_dir
+* find_files
+* find_file!
+* gzip
+* gunzip
+* tarball
+* untarball
+* tarball_list
+* encrypt
+* http_get_file
+* timeout_retry
 
 ## Contributing
 
