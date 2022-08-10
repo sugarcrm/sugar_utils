@@ -18,13 +18,13 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.5.0'
+  spec.required_ruby_version = '>= 2.3.0'
 
   spec.add_dependency 'multi_json',   '~> 1.0'
   spec.add_dependency 'solid_assert', '~> 1.0'
 
   spec.add_development_dependency 'aruba',              '~> 0.14.9'
-  spec.add_development_dependency 'bundler',            '~> 2.0'
+  spec.add_development_dependency 'bundler',            '~> 1.7'
   spec.add_development_dependency 'cucumber',           '~> 3.1.2'
   spec.add_development_dependency 'fakefs',             '~> 0.7'
   spec.add_development_dependency 'rake',               '~> 12.0'
