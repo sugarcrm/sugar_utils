@@ -27,3 +27,6 @@ RSpec/ExpectInHook:
 
 RSpec/MessageSpies:
   Enabled: false
+
+RSpec/EmptyLineAfterExample:
+  Enabled: false
