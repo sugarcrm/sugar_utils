@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'aruba',              '~> 0.14.9'
   spec.add_development_dependency 'bundler',            '~> 1.7'
   spec.add_development_dependency 'cucumber',           '~> 3.1.2'
-  spec.add_development_dependency 'fakefs',             '~> 0.7'
+  spec.add_development_dependency 'fakefs',             '~> 0.13.0'
   spec.add_development_dependency 'rake',               '~> 12.0'
   spec.add_development_dependency 'rspec',              '~> 3.8.0'
   spec.add_development_dependency 'rspec-side_effects', '~> 0.2.0'
