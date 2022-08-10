@@ -5,7 +5,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         # Due to https://github.com/actions/runner/issues/849, we have to use quotes for '3.0'
         ruby: ['2.2', '2.3', '2.4', '2.5', '2.6', head, jruby, jruby-head, truffleruby, truffleruby-head]
     runs-on: ${{ matrix.os }}
@@ -14,7 +14,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-        bundler: '1.17'
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - run: gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+    - run: gem install bundler -v '< 2'
     - run: bundle exec rake
