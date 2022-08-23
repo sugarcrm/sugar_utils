@@ -1,7 +1,7 @@
 # sugar_utils
 
 [![Gem Version](https://badge.fury.io/rb/sugar_utils.svg)](http://badge.fury.io/rb/sugar_utils)
-[![Build Status](https://travis-ci.org/sugarcrm/sugar_utils.svg?branch=master)](https://travis-ci.org/sugarcrm/sugar_utils)
+[![Build Status](https://github.com/sugarcrm/sugar_utils/actions/workflows/ci.yml/badge.svg)](https://github.com/sugarcrm/sugar_utils/actions/workflows/ci.yml)
 [![Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/gpa.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils)
 [![Test Coverage](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/coverage.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils/coverage)
 [![License](http://img.shields.io/badge/license-Apache2-green.svg?style=flat)](LICENSE)
@@ -76,7 +76,6 @@ Links to other places on the web where this projects exists:
 * [RubyGems](https://rubygems.org/gems/sugar_utils)
 * [Ruby LibHunt](https://ruby.libhunt.com/sugar_utils-alternatives)
 * [Ruby Toolbox](https://www.ruby-toolbox.com/projects/sugar_utils)
-* [TravisCI](https://travis-ci.org/sugarcrm/sugar_utils)
 
 ## Contributing
 
