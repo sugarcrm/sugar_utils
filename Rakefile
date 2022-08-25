@@ -17,6 +17,7 @@ RSpec::Core::RakeTask.new(:spec) do |task|
 end
 
 Cucumber::Rake::Task.new(:features) do |task|
+  task.cucumber_opts = '--publish-quiet'
 end
 
 RuboCop::RakeTask.new(:rubocop) do |task|
