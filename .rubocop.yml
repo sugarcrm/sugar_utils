@@ -2,11 +2,13 @@ require: rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.6
+  NewCops: enable
 
-Documentation:
-  Enabled: false
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle:      table
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
   Include:
     - 'spec/**/*'
@@ -30,3 +32,9 @@ RSpec/MessageSpies:
 
 RSpec/EmptyLineAfterExample:
   Enabled: false
+
+# NOTE: The rspec-tabular commands get confused with the default syntax is used
+# for Hashes, so disabling this check for specs so that `Hash[]` can be used.
+Style/HashConversion:
+  Exclude:
+    - 'spec/**/*'

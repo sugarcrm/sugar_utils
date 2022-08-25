@@ -75,7 +75,7 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [String]
-    def self.read(filename, options = {}) # rubocop:disable MethodLength
+    def self.read(filename, options = {}) # rubocop:disable Metrics/MethodLength
       options[:value_on_missing] ||= ''
       options[:raise_on_missing] = true if options[:raise_on_missing].nil?
 
@@ -161,7 +161,7 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
-    def self.write(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize
+    def self.write(filename, data, options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       write_options = WriteOptions.new(filename, options)
 
       FileUtils.mkdir_p(::File.dirname(filename))
@@ -214,7 +214,7 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
-    def self.atomic_write(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize
+    def self.atomic_write(filename, data, options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       write_options = WriteOptions.new(filename, options)
 
       # @note This method is similar to the atomic_write which is implemented in
@@ -302,7 +302,7 @@ module SugarUtils
     # @raise [SugarUtils::File::Error]
     #
     # @return [void]
-    def self.append(filename, data, options = {}) # rubocop:disable MethodLength, AbcSize
+    def self.append(filename, data, options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       write_options = WriteOptions.new(filename, options)
 
       FileUtils.mkdir_p(::File.dirname(filename))
@@ -338,7 +338,7 @@ module SugarUtils
     # Following the same pattern as the existing stdlib method deprecation
     # module.
     # @see http://ruby-doc.org/stdlib-2.0.0/libdoc/rubygems/rdoc/Gem/Deprecate.html
-    def self.deprecate_option(_method, option_name, option_repl, year, month) # rubocop:disable MethodLength
+    def self.deprecate_option(_method, option_name, option_repl, year, month) # rubocop:disable Metrics/MethodLength
       return if Gem::Deprecate.skip
 
       klass  = is_a?(Module)
@@ -361,7 +361,11 @@ module SugarUtils
         else
           "; use :#{option_repl} instead"
         end,
-        format('. It will be removed on or after %4d-%02d-01.', year, month),
+        format(
+          '. It will be removed on or after %<year>4d-%<month>02d-01.',
+          year:  year,
+          month: month
+        ),
         "\n#{target}#{method} called from #{location_of_external_caller}"
       ]
       warn("#{msg.join}.")
