@@ -48,7 +48,7 @@ module SugarUtils
       data.encoding,
       'binary',
       invalid: :replace,
-      undef:   :replace, # rubocop:disable Layout/AlignHash
+      undef:   :replace,
       replace: replacement_character
     )
   end

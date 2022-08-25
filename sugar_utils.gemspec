@@ -15,10 +15,11 @@ Gem::Specification.new do |spec|
   spec.license       = 'Apache-2.0'
 
   spec.files         = `git ls-files -z`.split("\x0")
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
   spec.required_ruby_version = '>= 2.6.0'
+
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
   spec.add_dependency 'multi_json',   '~> 1.0'
   spec.add_dependency 'solid_assert', '~> 1.0'
@@ -36,9 +37,7 @@ Gem::Specification.new do |spec|
   # without limiting.
   spec.add_development_dependency 'bundler-audit'
   spec.add_development_dependency 'license_finder'
-  # HACK: Limit ourselves to Rubocop versions which still support Ruby2.2. This
-  # can be removed once we drop support for Ruby2.2.
-  spec.add_development_dependency 'rubocop', '~> 0.68.0'
+  spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'yard'

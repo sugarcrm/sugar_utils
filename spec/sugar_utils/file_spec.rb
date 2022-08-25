@@ -125,7 +125,7 @@ describe SugarUtils::File do
         let(:options) { { key: :value } }
 
         before do
-          expect(described_class).to receive(:flock_shared)
+          allow(described_class).to receive(:flock_shared)
             .with(kind_of(File), options)
             .and_raise(Timeout::Error)
         end
@@ -182,7 +182,7 @@ describe SugarUtils::File do
       let(:options) { [] }
 
       it { expect_not_to_raise_error }
-      its_side_effects_are { expect(File.exist?(filename)).to eq(true) }
+      its_side_effects_are { expect(File.exist?(filename)).to be(true) }
     end
 
     context 'with options, and :mode key' do
@@ -238,7 +238,7 @@ describe SugarUtils::File do
       let(:options) { {} }
 
       before do
-        expect(described_class).to receive(:flock_exclusive)
+        allow(described_class).to receive(:flock_exclusive)
           .with(kind_of(File), options)
           .and_raise(Timeout::Error)
       end
@@ -341,7 +341,7 @@ describe SugarUtils::File do
       let(:options) { {} }
 
       before do
-        expect(described_class).to receive(:flock_exclusive)
+        allow(described_class).to receive(:flock_exclusive)
           .with(kind_of(File), options)
           .and_raise(Timeout::Error)
       end
@@ -458,7 +458,7 @@ describe SugarUtils::File do
       let(:options) { {} }
 
       before do
-        expect(described_class).to receive(:flock_exclusive)
+        allow(described_class).to receive(:flock_exclusive)
           .with(kind_of(File), options)
           .and_raise(Timeout::Error)
       end
