@@ -130,7 +130,7 @@ module SugarUtils
       write_options = WriteOptions.new(filename, options)
 
       FileUtils.mkdir_p(::File.dirname(filename))
-      FileUtils.touch(filename, write_options.slice(:mtime))
+      FileUtils.touch(filename, **write_options.slice(:mtime))
       change_access(
         filename,
         write_options.owner,

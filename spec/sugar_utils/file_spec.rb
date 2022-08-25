@@ -162,7 +162,7 @@ describe SugarUtils::File do
 
     before do
       allow(described_class).to receive(:read)
-        .with(:filename, key: :value, value_on_missing: :missing)
+        .with(:filename, { key: :value, value_on_missing: :missing })
         .and_return(file_content)
     end
 
