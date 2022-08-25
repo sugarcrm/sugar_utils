@@ -23,22 +23,19 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'multi_json',   '~> 1.0'
   spec.add_dependency 'solid_assert', '~> 1.0'
 
-  spec.add_development_dependency 'aruba',              '~> 0.14.9'
+  spec.add_development_dependency 'aruba',              '~> 2.0'
   spec.add_development_dependency 'bundler',            '~> 2.0'
-  spec.add_development_dependency 'cucumber',           '~> 3.1.2'
-  spec.add_development_dependency 'fakefs',             '~> 0.7'
-  spec.add_development_dependency 'rake',               '~> 12.0'
-  spec.add_development_dependency 'rspec',              '~> 3.8.0'
+  spec.add_development_dependency 'cucumber',           '~> 8.0'
+  spec.add_development_dependency 'fakefs',             '~> 1.0'
+  spec.add_development_dependency 'rake',               '~> 13.0'
+  spec.add_development_dependency 'rspec',              '~> 3.8'
   spec.add_development_dependency 'rspec-side_effects', '~> 0.2.0'
-  spec.add_development_dependency 'rspec-tabular',      '~> 0.2.0'
+  spec.add_development_dependency 'rspec-tabular',      '~> 0.3.0'
 
   # Dependencies whose APIs we do not really depend upon, and can be upgraded
   # without limiting.
   spec.add_development_dependency 'bundler-audit'
-  # HACK: Limit license_finder because after v5.x and Ruby2.3 the specification
-  # format changes. This can probably be removed once Ruby2.2 support is
-  # removed.
-  spec.add_development_dependency 'license_finder', '~> 5.0'
+  spec.add_development_dependency 'license_finder'
   # HACK: Limit ourselves to Rubocop versions which still support Ruby2.2. This
   # can be removed once we drop support for Ruby2.2.
   spec.add_development_dependency 'rubocop', '~> 0.68.0'
