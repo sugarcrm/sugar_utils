@@ -14,6 +14,10 @@ describe SugarUtils do
     it_with nil,     false
     it_with false,   false
     it_with true,    true
+    it_with 0,       false
+    it_with 1,       true
+    it_with 2,       true
+    it_with 42,      true
     it_with :value,  true
     it_with 'value', true
     it_with 'false', false
