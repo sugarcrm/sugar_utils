@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Changed
 - update the required ruby version from v2.2 to v2.6
+- Sugar::Utils.ensure_boolean to consider `0` to be false
 
 ## [0.6.0] - 2019-05-31
 ### Added
