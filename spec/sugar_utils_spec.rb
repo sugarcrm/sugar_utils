@@ -11,21 +11,28 @@ describe SugarUtils do
     subject { described_class.ensure_boolean(value) }
 
     inputs  :value
-    it_with nil,     false
-    it_with false,   false
-    it_with true,    true
-    it_with 0,       false
-    it_with 1,       true
-    it_with 2,       true
-    it_with 42,      true
-    it_with :value,  true
-    it_with 'value', true
-    it_with 'false', false
-    it_with 'FALSE', false
-    it_with 'FaLsE', false
-    it_with :false,  false # rubocop:disable Lint/BooleanSymbol
-    it_with :FALSE,  false
-    it_with :FaLsE,  false
+    it_with nil,           false
+    it_with false,         false
+    it_with true,          true
+    it_with 0,             false
+    it_with 1,             true
+    it_with 2,             true
+    it_with 42,            true
+    it_with :value,        true
+    it_with 'value',       true
+    it_with '   value   ', true
+    it_with 'false',       false
+    it_with '   false   ', false
+    it_with "\n false \n", false
+    it_with 'FALSE',       false
+    it_with '   FALSE   ', false
+    it_with "\n FALSE \n", false
+    it_with 'FaLsE',       false
+    it_with '   FaLsE   ', false
+    it_with "\n FaLsE \n", false
+    it_with :false,        false # rubocop:disable Lint/BooleanSymbol
+    it_with :FALSE,        false
+    it_with :FaLsE,        false
   end
 
   describe '.ensure_integer' do
