@@ -11,7 +11,7 @@ module SugarUtils
   def self.ensure_boolean(value)
     return false if value == 0 # rubocop:disable Style/NumericPredicate
 
-    return false if value.respond_to?(:to_s) && value.to_s.casecmp('false').zero?
+    return false if value.respond_to?(:to_s) && value.to_s.strip.casecmp('false').zero?
 
     value ? true : false
   end
