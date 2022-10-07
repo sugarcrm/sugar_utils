@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.7.0] - 2022-10-07
 ### Changed
 - update the required ruby version from v2.2 to v2.6
 - Sugar::Utils.ensure_boolean to consider `0` to be false
