@@ -7,7 +7,7 @@
 [![License](http://img.shields.io/badge/license-Apache2-green.svg?style=flat)](LICENSE)
 
 [![RubyDoc](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://rubydoc.org/gems/sugar_utils)
-[![CucumberPro](https://img.shields.io/badge/cucumber.pro-sugar_utils-3d10af.svg)](https://app.cucumber.pro/projects/sugar_utils)
+[![CucumberReports: sugar_utils](https://messages.cucumber.io/api/report-collections/7a992611-6430-4ca9-ae77-aa071ba60c8b/badge)](https://reports.cucumber.io/report-collections/7a992611-6430-4ca9-ae77-aa071ba60c8b)
 
 Utility methods extracted from SugarCRM Ruby projects.
 
@@ -67,7 +67,7 @@ These methods might be added in the future:
 Links to other places on the web where this projects exists:
 
 * [Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils)
-* [CucumberPro](https://app.cucumber.pro/projects/sugar_utils)
+* [Cucumber Reporting](https://reports.cucumber.io/report-collections/7a992611-6430-4ca9-ae77-aa071ba60c8b)
 * [Github](https://github.com/sugarcrm/sugar_utils)
 * [OpenHub](https://www.openhub.net/p/sugar_utils)
 * [RubyDoc](http://rubydoc.org/gems/sugar_utils)
