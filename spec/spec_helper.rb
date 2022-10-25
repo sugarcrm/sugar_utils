@@ -5,11 +5,6 @@ require 'rspec/tabular'
 require 'fakefs/spec_helpers'
 require 'rspec/side_effects'
 require 'etc'
-# HACK: including pp seems to resolve an error with FakeFS and File.read
-# This seems to be related to but not the same as the problem mentioned in the
-# README
-# https://github.com/fakefs/fakefs#fakefs-vs-pp-----typeerror-superclass-mismatch-for-class-file
-require 'pp'
 
 # Setup code coverage
 require 'simplecov'
