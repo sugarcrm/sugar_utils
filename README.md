@@ -69,6 +69,7 @@ Links to other places on the web where this projects exists:
 * [Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils)
 * [Cucumber Reporting](https://reports.cucumber.io/report-collections/7a992611-6430-4ca9-ae77-aa071ba60c8b)
 * [Github](https://github.com/sugarcrm/sugar_utils)
+* [Kandi](https://kandi.openweaver.com/ruby/sugarcrm/sugar_utils)
 * [OpenHub](https://www.openhub.net/p/sugar_utils)
 * [RubyDoc](http://rubydoc.org/gems/sugar_utils)
 * [RubyGems](https://rubygems.org/gems/sugar_utils)
