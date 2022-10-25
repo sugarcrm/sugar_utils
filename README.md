@@ -6,7 +6,6 @@
 [![Test Coverage](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/coverage.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils/coverage)
 [![License](http://img.shields.io/badge/license-Apache2-green.svg?style=flat)](LICENSE)
 
-[![Inline docs](http://inch-ci.org/github/sugarcrm/sugar_utils.svg)](http://inch-ci.org/github/sugarcrm/sugar_utils)
 [![RubyDoc](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://rubydoc.org/gems/sugar_utils)
 [![CucumberPro](https://img.shields.io/badge/cucumber.pro-sugar_utils-3d10af.svg)](https://app.cucumber.pro/projects/sugar_utils)
 
@@ -69,7 +68,6 @@ Links to other places on the web where this projects exists:
 
 * [Code Climate](https://codeclimate.com/github/sugarcrm/sugar_utils)
 * [CucumberPro](https://app.cucumber.pro/projects/sugar_utils)
-* [InchCI](http://inch-ci.org/github/sugarcrm/sugar_utils)
 * [Github](https://github.com/sugarcrm/sugar_utils)
 * [OpenHub](https://www.openhub.net/p/sugar_utils)
 * [RubyDoc](http://rubydoc.org/gems/sugar_utils)
