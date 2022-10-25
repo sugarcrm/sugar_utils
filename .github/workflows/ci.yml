@@ -1,5 +1,8 @@
 name: CI
-on: [push]
+on:
+  push:
+  schedule:
+      - cron: '0 1 * * 0' # every Sunday at 1am
 jobs:
   test:
     strategy:
