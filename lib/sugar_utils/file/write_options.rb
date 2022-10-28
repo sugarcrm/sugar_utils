@@ -4,7 +4,7 @@ module SugarUtils
   module File
     # @api private
     class WriteOptions
-      # @parma filename [String]
+      # @param filename [String]
       # @param options [Hash]
       def initialize(filename, options)
         @filename       = filename
@@ -47,7 +47,7 @@ module SugarUtils
         @options[:group] || @existing_group
       end
 
-      # @param keys [Array]
+      # @param args [Array]
       # @return [Hash]
       def slice(*args)
         keys = args.flatten.compact

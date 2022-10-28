@@ -64,4 +64,4 @@ task 'bundle:outdated' do
   sh("bundle outdated --only-explicit | tee #{bundle_outdated_report_pathname}")
 end
 
-task default: %i[spec features rubocop yardstick_measure bundle:audit license_finder]
+task default: %i[spec features rubocop yard yardstick_measure bundle:audit license_finder]
