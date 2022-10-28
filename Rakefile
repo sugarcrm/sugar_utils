@@ -54,4 +54,14 @@ Yardstick::Rake::Measurement.new(:yardstick_measure) do |measurement|
   measurement.output = 'tmp/yard_coverage.txt'
 end
 
+desc 'Show which specified gems are outdated'
+task 'bundle:outdated' do
+  bundle_outdated_report_pathname =
+    Pathname(Rake.application.original_dir).join('tmp', 'bundle_outdated.txt')
+  bundle_outdated_report_pathname.dirname.mkpath
+
+  # TODO: Should consider re-writing this without using `tee`.
+  sh("bundle outdated --only-explicit | tee #{bundle_outdated_report_pathname}")
+end
+
 task default: %i[spec features rubocop yardstick_measure bundle:audit license_finder]
