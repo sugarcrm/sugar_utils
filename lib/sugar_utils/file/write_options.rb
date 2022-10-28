@@ -7,8 +7,10 @@ module SugarUtils
       # @parma filename [String]
       # @param options [Hash]
       def initialize(filename, options)
-        @filename = filename
-        @options  = options
+        @filename       = filename
+        @options        = options
+        @existing_owner = nil
+        @existing_group = nil
 
         return unless filename && ::File.exist?(filename)
 
