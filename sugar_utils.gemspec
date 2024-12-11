@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0")
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 3.1.2'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 
@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'solid_assert', '~> 1.0'
 
   spec.add_development_dependency 'aruba',              '~> 2.0'
-  spec.add_development_dependency 'bundler',            '~> 2.0'
   spec.add_development_dependency 'cucumber',           '~> 8.0'
   spec.add_development_dependency 'fakefs',             '~> 1.0'
   spec.add_development_dependency 'rake',               '~> 13.0'
@@ -36,7 +35,9 @@ Gem::Specification.new do |spec|
   # Dependencies whose APIs we do not really depend upon, and can be upgraded
   # without limiting.
   spec.add_development_dependency 'bundler-audit'
+  spec.add_development_dependency 'irb'
   spec.add_development_dependency 'license_finder'
+  spec.add_development_dependency 'logger'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'

@@ -22,9 +22,9 @@ Scenario: Read an existing file
 
     puts SugarUtils::File.read_json('test.json')
     """
-  Then the output should contain:
+  Then the output should match:
     """
-    {"key"=>"value"}
+    {"key"\s*=>\s*"value"}
     """
 
 Scenario: Read an existing file and scurb encoding errors
@@ -37,7 +37,7 @@ Scenario: Read an existing file and scurb encoding errors
     File.write('test.json', %({\"key\":\"foo\\x92bar\\x93\"}))
     puts SugarUtils::File.read_json('test.json', scrub_encoding: true)
     """
-  Then the output should contain:
+  Then the output should match:
     """
-    {"key"=>"foobar"}
+    {"key"\s*=>\s*"foobar"}
     """

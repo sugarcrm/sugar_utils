@@ -1,8 +1,13 @@
 require: rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 2.6
   NewCops: enable
+
+Style/EmptyLiteral:
+  Enabled: false
+
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec
 
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
