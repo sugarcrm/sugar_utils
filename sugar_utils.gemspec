@@ -39,6 +39,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'license_finder'
   spec.add_development_dependency 'logger'
   spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-performance'
+  spec.add_development_dependency 'rubocop-rake'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'simplecov-lcov'
