@@ -6,7 +6,7 @@
 [![Test Coverage](https://codeclimate.com/github/sugarcrm/sugar_utils/badges/coverage.svg)](https://codeclimate.com/github/sugarcrm/sugar_utils/coverage)
 [![License](http://img.shields.io/badge/license-Apache2-green.svg?style=flat)](LICENSE)
 
-[![RubyDoc](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://rubydoc.org/gems/sugar_utils)
+[![RubyDoc](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](https://rubydoc.info/gems/sugar_utils)
 [![CucumberReports: sugar_utils](https://messages.cucumber.io/api/report-collections/7a992611-6430-4ca9-ae77-aa071ba60c8b/badge)](https://reports.cucumber.io/report-collections/7a992611-6430-4ca9-ae77-aa071ba60c8b)
 
 Utility methods extracted from SugarCRM Ruby projects.
@@ -71,7 +71,7 @@ Links to other places on the web where this projects exists:
 * [Github](https://github.com/sugarcrm/sugar_utils)
 * [Kandi](https://kandi.openweaver.com/ruby/sugarcrm/sugar_utils)
 * [OpenHub](https://www.openhub.net/p/sugar_utils)
-* [RubyDoc](http://rubydoc.org/gems/sugar_utils)
+* [RubyDoc](https://rubydoc.info/gems/sugar_utils)
 * [RubyGems](https://rubygems.org/gems/sugar_utils)
 * [Ruby LibHunt](https://ruby.libhunt.com/sugar_utils-alternatives)
 * [Ruby Toolbox](https://www.ruby-toolbox.com/projects/sugar_utils)
@@ -88,4 +88,4 @@ See [CONTRIBUTING](CONTRIBUTING.md) for how you can contribute changes back into
 
 ## Acknowledgements
 
-Copyright 2019 [SugarCRM Inc.](http://sugarcrm.com), released under the Apache2 License.
+Copyright 2025 [SugarCRM Inc.](http://sugarcrm.com), released under the [Apache2 License](https://www.apache.org/licenses/LICENSE-2.0.html).

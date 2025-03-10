@@ -10,7 +10,7 @@ describe SugarUtils::File do
 
     before do
       allow(Timeout).to receive(:timeout).with(expected_timeout).and_yield
-      expect(file).to receive(:flock).with(::File::LOCK_SH)
+      expect(file).to receive(:flock).with(File::LOCK_SH)
     end
 
     inputs            :options,           :expected_timeout
@@ -26,7 +26,7 @@ describe SugarUtils::File do
 
     before do
       allow(Timeout).to receive(:timeout).with(expected_timeout).and_yield
-      expect(file).to receive(:flock).with(::File::LOCK_EX)
+      expect(file).to receive(:flock).with(File::LOCK_EX)
     end
 
     inputs            :options,           :expected_timeout
@@ -559,7 +559,7 @@ describe SugarUtils::File do
   #
   # @return [void]
   def write(filename, content, perm = nil)
-    FileUtils.mkdir_p(::File.dirname(filename))
+    FileUtils.mkdir_p(File.dirname(filename))
     File.write(filename, content)
     FileUtils.chmod(perm, filename) if perm
   end

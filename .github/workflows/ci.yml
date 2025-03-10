@@ -9,29 +9,29 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        ruby: ['2.6', '2.7', '3.0', '3.1', '3.2', head]
+        ruby: ['3.1', '3.2', '3.4', head]
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - run: bundle exec rake
+    - run: bundle exec rake ${{ endsWith(matrix.ruby, 'head') && 'spec' || 'tests' }}
   coverage:
     needs: [ test ]
     name: coverage
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '2.6'
         bundler-cache: true
     - run: bundle exec rake
       env:
         CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
-    - uses: paambaati/codeclimate-action@v3.2.0
+    - uses: paambaati/codeclimate-action@v9.0.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
